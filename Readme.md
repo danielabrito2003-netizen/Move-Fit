@@ -8,7 +8,6 @@
 **Docentes:** Professor Nuno F. Mendes, Professora Patrícia Leite  
 **Ano:** 2024/2025  
 
----
 
 ## Introdução
 A aplicação Move&Fit tem como objetivo promover estilos de vida mais saudáveis através da monitorização de atividades físicas e da oferta de planos de treino personalizados, com integração opcional de dispositivos **wearables**. 
@@ -58,7 +57,7 @@ MoveFit/
 │           │   │   ├── ui/
 │           │   │   │   ├── components/             # Componentes reutilizáveis (cards, botões, etc.)
 │           │   │   │   └── theme/
-│           │   │   │       ├── Color.kt            # Paleta de cores da app
+│           │   │   │       ├── Color.kt            # Palete de cores da app
 │           │   │   │       ├── Shape.kt            # Definição de cantos e formas
 │           │   │   │       ├── Theme.kt            # Configuração geral do tema
 │           │   │   │       └── Type.kt             # Tipografia
@@ -123,7 +122,6 @@ MoveFit/
 └── build.gradle.kts                                 # Ficheiro de configuração do projeto
 ```
 
-
 ## Fluxo de Dados
 
 ### 1. Início da Aplicação
@@ -154,10 +152,6 @@ MoveFit/
 ### 8. Integração com Wearables
 - `SyncWearableDataUseCase.kt` poderá usar sensores locais ou APIs de terceiros para recolher dados e integrá-los.
 
----
 
 ## Conclusão
 Este projeto Move&Fit segue uma arquitetura clara, modular e adaptada à realidade académica da licenciatura, promovendo uma implementação eficiente dos requisitos essenciais, com possibilidade de expansão futura para funcionalidades avançadas.
----
-
-Se quiseres, posso já gerar o `FirebaseConfig.kt` e os ficheiros base para começar o código. Queres que o faça agora?
