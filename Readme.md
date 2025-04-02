@@ -1,4 +1,3 @@
-```markdown
 # Move&Fit - Projeto de Estágio 2025
 
 ## Autor
@@ -159,8 +158,6 @@ MoveFit/
 
 ## Conclusão
 Este projeto Move&Fit segue uma arquitetura clara, modular e adaptada à realidade académica da licenciatura, promovendo uma implementação eficiente dos requisitos essenciais, com possibilidade de expansão futura para funcionalidades avançadas.
-```
-
 ---
 
 Se quiseres, posso já gerar o `FirebaseConfig.kt` e os ficheiros base para começar o código. Queres que o faça agora?
