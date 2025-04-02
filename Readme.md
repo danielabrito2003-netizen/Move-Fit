@@ -29,7 +29,7 @@ A implementação é feita em **Kotlin** com **Jetpack Compose**, sem utilizaç�
 
 ```markdown
 ## Estrutura de Pastas e Ficheiros
-```
+
 MoveFit/
 ├── app/
 │   └── src/
