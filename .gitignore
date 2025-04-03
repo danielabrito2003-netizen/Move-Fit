@@ -1,15 +1,32 @@
+# Android Studio
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+.idea/
+.gradle/
+build/
+captures/
 local.properties
+
+# Firebase config
+app/google-services.json
+
+# Cache e build externo
+.cxx/
+.externalNativeBuild/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Outros ficheiros temporários ou auxiliares
+/AuxFiles/
+*.log
+
+# Específicos do IntelliJ/AS
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
