@@ -1,4 +1,5 @@
 package com.example.movefit.presentation.ui.theme
 
-object Type {
-}
+import androidx.compose.material3.Typography
+
+val Typography = Typography()

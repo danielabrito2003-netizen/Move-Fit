@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">MoveFit</string>
+
+    <!-- Strings específicas do ecrã de Login -->
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Palavra-passe</string>
+    <string name="login_forgot_password">Recuperar Palavra-passe</string>
+    <string name="login_button_sign_in">Iniciar Sessão</string>
+    <string name="login_button_register">Criar Conta</string>
 </resources>

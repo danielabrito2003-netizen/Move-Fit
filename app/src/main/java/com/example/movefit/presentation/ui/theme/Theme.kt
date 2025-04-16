@@ -1,4 +1,22 @@
-package com.example.movefit.presentation.ui.theme
+package pt.ipca.movefit.presentation.ui.theme
 
-object Theme {
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+
+private val LightColors = lightColorScheme(
+    primary = Color(0xFF2E7D32),
+    secondary = Color(0xFF66BB6A),
+    background = Color(0xFFE8F5E9)
+)
+
+@Composable
+fun MoveFitTheme(content: @Composable () -> Unit) {
+    MaterialTheme(
+        colorScheme = LightColors,
+        typography = androidx.compose.material3.Typography(),
+        content = content
+    )
 }
