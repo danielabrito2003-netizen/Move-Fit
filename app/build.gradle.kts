@@ -1,9 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    // ⚠️ Firebase temporariamente desativado porque o ficheiro google-services.json não existe
-    // id("com.google.gms.google-services")
-    // kotlin("kapt")
+    //id("com.google.gms.google-services")
+    //kotlin("kapt")
 }
 
 android {
@@ -45,7 +44,6 @@ android {
 }
 
 dependencies {
-    // Firebase (comentado se não vais usar já)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.database.ktx)
@@ -59,6 +57,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.compose.navigation)
+
     //implementation(libs.room.runtime)
     //implementation(libs.room.ktx)
     //kapt(libs.room.compiler)
