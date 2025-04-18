@@ -2,116 +2,149 @@ package pt.ipca.movefit.presentation.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import pt.ipca.movefit.R
 
+/**
+ * Ecrã de Login da aplicação Move&Fit.
+ * Segue a arquitetura MVVM e utiliza o LoginViewModel para gerir o estado.
+ */
 @Composable
-fun LoginScreen(
-    onLoginClick: () -> Unit = {},
-    onRegisterClick: () -> Unit = {},
-    onForgotPasswordClick: () -> Unit = {}
-) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
 
-    Column(
+    // Estado atual dos campos de texto
+    val email = loginViewModel.email.collectAsState()
+    val password = loginViewModel.password.collectAsState()
+
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFE8F5E9))
-            .padding(horizontal = 32.dp, vertical = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly // ⬅ Isto centraliza o conteúdo verticalmente
+            .background(colorResource(id = R.color.light_green_background))
     ) {
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+        // Ícone da porta (logout)
+        IconButton(
+            onClick = { /* ação logout */ },
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(top = 36.dp, start = 12.dp) // ajustado
         ) {
-            Image(
+            Icon(
                 painter = painterResource(id = R.drawable.porta),
-                contentDescription = "Ícone de saída",
-                modifier = Modifier.size(32.dp)
-            )
-            Image(
-                painter = painterResource(id = R.drawable.settings),
-                contentDescription = "Definições",
-                modifier = Modifier.size(32.dp)
+                contentDescription = "Logout",
+                tint = colorResource(id = R.color.green_primary)
             )
         }
 
-        Text(
-            text = "Move&Fit",
-            fontSize = 32.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        )
-
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp),
-            singleLine = true
-        )
-
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Palavra-passe") },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp),
-            singleLine = true,
-            visualTransformation = PasswordVisualTransformation()
-        )
-
-        Text(
-            text = "Recuperar Palavra-passe",
-            color = Color(0xFF2E7D32),
-            fontSize = 14.sp,
+        // Ícone das definições
+        IconButton(
+            onClick = { /* ação definições */ },
             modifier = Modifier
-                .align(Alignment.End)
-                .clickable { onForgotPasswordClick() }
-        )
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .align(Alignment.TopEnd)
+                .padding(top = 36.dp, end = 12.dp) // ajustado
         ) {
-            Button(
-                onClick = onLoginClick,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier
-                    .weight(1f)
-                    .height(48.dp)
-            ) {
-                Text("Iniciar Sessão", fontWeight = FontWeight.Bold, color = Color.White)
-            }
+            Icon(
+                painter = painterResource(id = R.drawable.settings),
+                contentDescription = "Definições",
+                tint = colorResource(id = R.color.green_primary)
+            )
+        }
 
-            Spacer(modifier = Modifier.width(16.dp))
+        // Coluna principal
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp)
+                .align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Logótipo do utilizador a andar
+            Image(
+                painter = painterResource(id = R.drawable.andar),
+                contentDescription = "Ícone Move&Fit",
+                modifier = Modifier.size(60.dp)
+            )
 
-            Button(
-                onClick = onRegisterClick,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
-                shape = RoundedCornerShape(8.dp),
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Título da app
+            Text(
+                text = "Move&Fit",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            // Campo de email
+            OutlinedTextField(
+                value = email.value,
+                onValueChange = { loginViewModel.onEmailChanged(it) },
+                label = { Text("Email") },
                 modifier = Modifier
-                    .weight(1f)
-                    .height(48.dp)
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp)
+            )
+
+            // Campo de palavra-passe
+            OutlinedTextField(
+                value = password.value,
+                onValueChange = { loginViewModel.onPasswordChanged(it) },
+                label = { Text("Palavra-passe") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            // Link "Recuperar Palavra-passe"
+            ClickableText(
+                text = AnnotatedString("Recuperar Palavra-passe"),
+                onClick = { /* ação recuperar password */ },
+                modifier = Modifier
+                    .padding(top = 8.dp, bottom = 24.dp),
+                style = LocalTextStyle.current.copy(
+                    color = colorResource(id = R.color.green_primary),
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center
+                )
+            )
+
+            // Botões de ação lado a lado
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Text("Criar Conta", fontWeight = FontWeight.Bold, color = Color.White)
+                Button(
+                    onClick = { loginViewModel.onLoginClicked() },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(id = R.color.green_primary)
+                    ),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Text("Iniciar Sessão", color = Color.White)
+                }
+
+                Button(
+                    onClick = { /* ação criar conta */ },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(id = R.color.green_primary)
+                    ),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Text("Criar Conta", color = Color.White)
+                }
             }
         }
     }
