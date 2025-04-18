@@ -20,24 +20,47 @@ class LoginViewModel : ViewModel() {
     val password: StateFlow<String> = _password
 
     /**
-     * Atualiza o estado do email sempre que o utilizador altera o campo.
+     * Atualiza o estado do campo de email
      */
     fun onEmailChanged(newEmail: String) {
         _email.value = newEmail
     }
 
     /**
-     * Atualiza o estado da palavra-passe sempre que o utilizador altera o campo.
+     * Atualiza o estado do campo de palavra-passe
      */
     fun onPasswordChanged(newPassword: String) {
         _password.value = newPassword
     }
 
     /**
-     * Função a ser usada quando o botão de iniciar sessão for clicado.
-     * Aqui será adicionada a lógica de autenticação mais tarde.
+     * Função que será usada no futuro para iniciar sessão com um caso de uso.
      */
     fun onLoginClicked() {
-        // TODO: Implementar lógica de login com use case
+        // TODO: Implementar lógica de login com Firebase ou UseCase
+    }
+
+    /**
+     * Função placeholder para enviar código de recuperação.
+     * (a usar futuramente com Firebase/AuthUseCase)
+     */
+    fun onSendRecoveryCode(email: String) {
+        // TODO: Enviar código de recuperação para o email
+    }
+
+    /**
+     * Função placeholder para validar o código introduzido.
+     */
+    fun onValidateCode(code: String): Boolean {
+        // TODO: Validar código introduzido pelo utilizador
+        return true // temporário
+    }
+
+    /**
+     * Função placeholder para definir nova palavra-passe.
+     */
+    fun onDefineNewPassword(newPassword: String, confirmPassword: String): Boolean {
+        // TODO: Verificar se ambas as passwords coincidem e definir nova
+        return newPassword == confirmPassword
     }
 }

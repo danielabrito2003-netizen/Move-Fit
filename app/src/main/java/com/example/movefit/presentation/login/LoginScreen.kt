@@ -2,32 +2,38 @@ package pt.ipca.movefit.presentation.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import pt.ipca.movefit.R
+import pt.ipca.movefit.presentation.DEFINE_NEW_PASSWORD_ROUTE
+import pt.ipca.movefit.presentation.RECOVER_PASSWORD_ROUTE
+import pt.ipca.movefit.presentation.VERIFY_CODE_ROUTE
 
-/**
- * Ecrã de Login da aplicação Move&Fit.
- * Segue a arquitetura MVVM e utiliza o LoginViewModel para gerir o estado.
- */
 @Composable
-fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
-
-    // Estado atual dos campos de texto
+fun LoginScreen(
+    navController: NavHostController,
+    loginViewModel: LoginViewModel = viewModel()
+) {
     val email = loginViewModel.email.collectAsState()
     val password = loginViewModel.password.collectAsState()
 
@@ -36,35 +42,8 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
             .fillMaxSize()
             .background(colorResource(id = R.color.light_green_background))
     ) {
-        // Ícone da porta (logout)
-        IconButton(
-            onClick = { /* ação logout */ },
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(top = 36.dp, start = 12.dp) // ajustado
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.porta),
-                contentDescription = "Logout",
-                tint = colorResource(id = R.color.green_primary)
-            )
-        }
+        TopIcons()
 
-        // Ícone das definições
-        IconButton(
-            onClick = { /* ação definições */ },
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(top = 36.dp, end = 12.dp) // ajustado
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.settings),
-                contentDescription = "Definições",
-                tint = colorResource(id = R.color.green_primary)
-            )
-        }
-
-        // Coluna principal
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -72,7 +51,6 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Logótipo do utilizador a andar
             Image(
                 painter = painterResource(id = R.drawable.andar),
                 contentDescription = "Ícone Move&Fit",
@@ -81,7 +59,6 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Título da app
             Text(
                 text = "Move&Fit",
                 fontSize = 24.sp,
@@ -90,7 +67,6 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            // Campo de email
             OutlinedTextField(
                 value = email.value,
                 onValueChange = { loginViewModel.onEmailChanged(it) },
@@ -100,28 +76,28 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
                     .padding(bottom = 12.dp)
             )
 
-            // Campo de palavra-passe
             OutlinedTextField(
                 value = password.value,
                 onValueChange = { loginViewModel.onPasswordChanged(it) },
                 label = { Text("Palavra-passe") },
+                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
             )
 
-            // Link "Recuperar Palavra-passe"
             ClickableText(
                 text = AnnotatedString("Recuperar Palavra-passe"),
-                onClick = { /* ação recuperar password */ },
+                onClick = {
+                    navController.navigate(RECOVER_PASSWORD_ROUTE)
+                },
                 modifier = Modifier
                     .padding(top = 8.dp, bottom = 24.dp),
-                style = LocalTextStyle.current.copy(
+                style = TextStyle(
                     color = colorResource(id = R.color.green_primary),
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center
                 )
             )
 
-            // Botões de ação lado a lado
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -137,7 +113,7 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
                 }
 
                 Button(
-                    onClick = { /* ação criar conta */ },
+                    onClick = { },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(id = R.color.green_primary)
                     ),
@@ -146,6 +122,280 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
                     Text("Criar Conta", color = Color.White)
                 }
             }
+        }
+
+        BottomIcons()
+    }
+}
+
+@Composable
+fun RecoverPasswordScreen(navController: NavHostController) {
+    var email by remember { mutableStateOf("") }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.light_green_background))
+    ) {
+        TopIcons()
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+            )
+
+            Text(
+                text = "Texto informativo: “Receberás um e-mail com um código para redefinir a tua palavra-passe”",
+                color = Color.Gray,
+                fontSize = 13.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            Text(
+                text = "Voltar ao Login",
+                color = colorResource(id = R.color.green_primary),
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .clickable { navController.popBackStack() }
+                    .padding(bottom = 16.dp)
+            )
+
+            Button(
+                onClick = { navController.navigate(VERIFY_CODE_ROUTE) },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorResource(id = R.color.green_primary)
+                ),
+                shape = MaterialTheme.shapes.large,
+                modifier = Modifier
+                    .height(48.dp)
+                    .width(200.dp)
+            ) {
+                Text("Enviar Código", color = Color.White)
+            }
+        }
+
+        BottomIcons()
+    }
+}
+
+@Composable
+fun VerifyCodeScreen(
+    navController: NavHostController,
+    onBackToLogin: () -> Unit,
+    onValidateCode: () -> Unit
+) {
+    var code by remember { mutableStateOf("") }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.light_green_background))
+    ) {
+        TopIcons()
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Verificação de Código",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Gray
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = "Texto explicativo: “Introduz o código que recebeste no teu e-mail para continuar”",
+                color = Color.Gray,
+                fontSize = 13.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            OutlinedTextField(
+                value = code,
+                onValueChange = { code = it },
+                label = { Text("Inserir o código") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            )
+
+            Text(
+                text = "Voltar ao Login",
+                color = colorResource(id = R.color.green_primary),
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .clickable { onBackToLogin() }
+                    .padding(bottom = 24.dp)
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(
+                    onClick = { onValidateCode() },
+                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_primary)),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Validar Código", color = Color.White)
+                }
+
+                Button(
+                    onClick = { },
+                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_primary)),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text("Reenviar Código", color = Color.White)
+                }
+            }
+        }
+
+        BottomIcons()
+    }
+}
+
+@Composable
+fun DefineNewPasswordScreen(
+    navController: NavHostController,
+    onBackToLogin: () -> Unit
+) {
+    var newPassword by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.light_green_background))
+    ) {
+        TopIcons()
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text("Definir Nova Palavra-passe", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.Gray)
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = newPassword,
+                onValueChange = { newPassword = it },
+                label = { Text("Nova Palavra-passe") },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            OutlinedTextField(
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                label = { Text("Confirmar Nova Palavra-passe") },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "Voltar ao Login",
+                color = colorResource(id = R.color.green_primary),
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .clickable { onBackToLogin() }
+                    .padding(bottom = 16.dp)
+            )
+
+            Button(
+                onClick = { /* guardar nova palavra-passe */ },
+                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_primary)),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Text("Definir Nova Palavra-passe", color = Color.White)
+            }
+        }
+
+        BottomIcons()
+    }
+}
+
+@Composable
+fun TopIcons() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 36.dp, start = 16.dp, end = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.porta),
+            contentDescription = "Logout",
+            tint = colorResource(id = R.color.green_primary),
+            modifier = Modifier.size(32.dp)
+        )
+        Icon(
+            painter = painterResource(id = R.drawable.settings),
+            contentDescription = "Definições",
+            tint = colorResource(id = R.color.green_primary),
+            modifier = Modifier.size(32.dp)
+        )
+    }
+}
+
+@Composable
+fun BottomIcons() {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.seta),
+                contentDescription = "Voltar",
+                tint = colorResource(id = R.color.green_primary),
+                modifier = Modifier.size(32.dp)
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.andar),
+                contentDescription = "Início",
+                tint = colorResource(id = R.color.green_primary),
+                modifier = Modifier.size(32.dp)
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.menu),
+                contentDescription = "Menu",
+                tint = colorResource(id = R.color.green_primary),
+                modifier = Modifier.size(32.dp)
+            )
         }
     }
 }
