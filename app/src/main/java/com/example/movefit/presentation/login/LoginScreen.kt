@@ -17,17 +17,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import pt.ipca.movefit.R
-import pt.ipca.movefit.presentation.DEFINE_NEW_PASSWORD_ROUTE
 import pt.ipca.movefit.presentation.RECOVER_PASSWORD_ROUTE
-import pt.ipca.movefit.presentation.VERIFY_CODE_ROUTE
 
 @Composable
 fun LoginScreen(
@@ -103,7 +101,9 @@ fun LoginScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(
-                    onClick = { loginViewModel.onLoginClicked() },
+                    onClick = {
+                        // Para o momento, apenas deixamos a navegação para o login
+                    },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(id = R.color.green_primary)
                     ),
@@ -113,7 +113,7 @@ fun LoginScreen(
                 }
 
                 Button(
-                    onClick = { },
+                    onClick = { navController.navigate("register") },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(id = R.color.green_primary)
                     ),
@@ -121,223 +121,6 @@ fun LoginScreen(
                 ) {
                     Text("Criar Conta", color = Color.White)
                 }
-            }
-        }
-
-        BottomIcons()
-    }
-}
-
-@Composable
-fun RecoverPasswordScreen(navController: NavHostController) {
-    var email by remember { mutableStateOf("") }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.light_green_background))
-    ) {
-        TopIcons()
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text("Email") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-            )
-
-            Text(
-                text = "Texto informativo: “Receberás um e-mail com um código para redefinir a tua palavra-passe”",
-                color = Color.Gray,
-                fontSize = 13.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            Text(
-                text = "Voltar ao Login",
-                color = colorResource(id = R.color.green_primary),
-                fontSize = 14.sp,
-                modifier = Modifier
-                    .clickable { navController.popBackStack() }
-                    .padding(bottom = 16.dp)
-            )
-
-            Button(
-                onClick = { navController.navigate(VERIFY_CODE_ROUTE) },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(id = R.color.green_primary)
-                ),
-                shape = MaterialTheme.shapes.large,
-                modifier = Modifier
-                    .height(48.dp)
-                    .width(200.dp)
-            ) {
-                Text("Enviar Código", color = Color.White)
-            }
-        }
-
-        BottomIcons()
-    }
-}
-
-@Composable
-fun VerifyCodeScreen(
-    navController: NavHostController,
-    onBackToLogin: () -> Unit,
-    onValidateCode: () -> Unit
-) {
-    var code by remember { mutableStateOf("") }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.light_green_background))
-    ) {
-        TopIcons()
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "Verificação de Código",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "Texto explicativo: “Introduz o código que recebeste no teu e-mail para continuar”",
-                color = Color.Gray,
-                fontSize = 13.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            OutlinedTextField(
-                value = code,
-                onValueChange = { code = it },
-                label = { Text("Inserir o código") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp)
-            )
-
-            Text(
-                text = "Voltar ao Login",
-                color = colorResource(id = R.color.green_primary),
-                fontSize = 14.sp,
-                modifier = Modifier
-                    .clickable { onBackToLogin() }
-                    .padding(bottom = 24.dp)
-            )
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Button(
-                    onClick = { onValidateCode() },
-                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_primary)),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text("Validar Código", color = Color.White)
-                }
-
-                Button(
-                    onClick = { },
-                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_primary)),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text("Reenviar Código", color = Color.White)
-                }
-            }
-        }
-
-        BottomIcons()
-    }
-}
-
-@Composable
-fun DefineNewPasswordScreen(
-    navController: NavHostController,
-    onBackToLogin: () -> Unit
-) {
-    var newPassword by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.light_green_background))
-    ) {
-        TopIcons()
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text("Definir Nova Palavra-passe", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.Gray)
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = newPassword,
-                onValueChange = { newPassword = it },
-                label = { Text("Nova Palavra-passe") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedTextField(
-                value = confirmPassword,
-                onValueChange = { confirmPassword = it },
-                label = { Text("Confirmar Nova Palavra-passe") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "Voltar ao Login",
-                color = colorResource(id = R.color.green_primary),
-                fontSize = 14.sp,
-                modifier = Modifier
-                    .clickable { onBackToLogin() }
-                    .padding(bottom = 16.dp)
-            )
-
-            Button(
-                onClick = { /* guardar nova palavra-passe */ },
-                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_primary)),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
-                shape = MaterialTheme.shapes.medium
-            ) {
-                Text("Definir Nova Palavra-passe", color = Color.White)
             }
         }
 

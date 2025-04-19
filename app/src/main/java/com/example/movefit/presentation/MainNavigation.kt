@@ -5,9 +5,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import pt.ipca.movefit.presentation.login.LoginScreen
-// ⛔️ NÃO precisas importar RecoverPasswordScreen, VerifyCodeScreen nem DefineNewPasswordScreen
+import pt.ipca.movefit.presentation.login.RecoverPasswordScreen
+import pt.ipca.movefit.presentation.login.VerifyCodeScreen
+import pt.ipca.movefit.presentation.login.DefineNewPasswordScreen
 
-// Rotas definidas como constantes
 const val LOGIN_ROUTE = "login"
 const val RECOVER_PASSWORD_ROUTE = "recover_password"
 const val VERIFY_CODE_ROUTE = "verify_code"
@@ -26,12 +27,12 @@ fun MainNavigation(navController: NavHostController) {
 
         // Ecrã de recuperação de palavra-passe
         composable(RECOVER_PASSWORD_ROUTE) {
-            pt.ipca.movefit.presentation.login.RecoverPasswordScreen(navController = navController)
+            RecoverPasswordScreen(navController = navController)
         }
 
         // Ecrã de verificação de código
         composable(VERIFY_CODE_ROUTE) {
-            pt.ipca.movefit.presentation.login.VerifyCodeScreen(
+            VerifyCodeScreen(
                 navController = navController,
                 onBackToLogin = {
                     navController.popBackStack(LOGIN_ROUTE, inclusive = false)
@@ -44,7 +45,7 @@ fun MainNavigation(navController: NavHostController) {
 
         // Ecrã para definir nova palavra-passe
         composable(DEFINE_NEW_PASSWORD_ROUTE) {
-            pt.ipca.movefit.presentation.login.DefineNewPasswordScreen(
+            DefineNewPasswordScreen(
                 navController = navController,
                 onBackToLogin = {
                     navController.popBackStack(LOGIN_ROUTE, inclusive = false)
