@@ -35,6 +35,7 @@ class LoginViewModel : ViewModel() {
 
     /**
      * Função que será usada no futuro para iniciar sessão com um caso de uso.
+     * Neste momento, a navegação para o dashboard é feita diretamente no LoginScreen.
      */
     fun onLoginClicked() {
         // TODO: Implementar lógica de login com Firebase ou UseCase

@@ -26,6 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import pt.ipca.movefit.R
 import pt.ipca.movefit.presentation.RECOVER_PASSWORD_ROUTE
+import pt.ipca.movefit.presentation.DASHBOARD_ROUTE // Para navegação para o Dashboard
 
 @Composable
 fun LoginScreen(
@@ -49,6 +50,7 @@ fun LoginScreen(
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Logo da aplicação
             Image(
                 painter = painterResource(id = R.drawable.andar),
                 contentDescription = "Ícone Move&Fit",
@@ -57,6 +59,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Título da aplicação
             Text(
                 text = "Move&Fit",
                 fontSize = 24.sp,
@@ -65,6 +68,7 @@ fun LoginScreen(
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
+            // Campo para o e-mail
             OutlinedTextField(
                 value = email.value,
                 onValueChange = { loginViewModel.onEmailChanged(it) },
@@ -74,6 +78,7 @@ fun LoginScreen(
                     .padding(bottom = 12.dp)
             )
 
+            // Campo para a palavra-passe
             OutlinedTextField(
                 value = password.value,
                 onValueChange = { loginViewModel.onPasswordChanged(it) },
@@ -82,6 +87,7 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
+            // Link para "Recuperar Palavra-passe"
             ClickableText(
                 text = AnnotatedString("Recuperar Palavra-passe"),
                 onClick = {
@@ -96,13 +102,16 @@ fun LoginScreen(
                 )
             )
 
+            // Botões de ação
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
+                // Botão para iniciar sessão
                 Button(
                     onClick = {
-                        // Para o momento, apenas deixamos a navegação para o login
+                        // Validar dados de login e navegar para o Dashboard
+                        navController.navigate(DASHBOARD_ROUTE)
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(id = R.color.green_primary)
@@ -112,6 +121,7 @@ fun LoginScreen(
                     Text("Iniciar Sessão", color = Color.White)
                 }
 
+                // Botão para criar conta
                 Button(
                     onClick = { navController.navigate("register") },
                     colors = ButtonDefaults.buttonColors(

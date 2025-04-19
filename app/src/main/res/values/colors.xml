@@ -1,5 +1,5 @@
 <resources>
-    <!-- Fundo suave da aplicação -->
+    <!-- Cor de fundo claro -->
     <color name="light_green_background">#EEF8ED</color>
 
     <!-- Verde principal para botões e ícones -->
