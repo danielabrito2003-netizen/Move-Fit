@@ -1,13 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Cor de fundo claro -->
-    <color name="light_green_background">#EEF8ED</color>
-
-    <!-- Verde principal para botões e ícones -->
-    <color name="green_primary">#2E7D32</color>
-
-    <!-- Verde de destaque (se necessário) -->
-    <color name="green_accent">#4CAF50</color>
-
-    <!-- Cor para erro ou mensagens -->
-    <color name="error_red">#D32F2F</color>
+    <color name="light_green_background">#ECFDED</color>
+    <color name="green_primary">#007A0E</color>
+    <color name="dark_green">#007A0E</color>
+    <color name="medium_green">#218C2E</color>
+    <color name="light_gray_text">#9B9B9B</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 </resources>

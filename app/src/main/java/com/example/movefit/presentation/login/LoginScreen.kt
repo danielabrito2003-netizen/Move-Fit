@@ -26,7 +26,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import pt.ipca.movefit.R
 import pt.ipca.movefit.presentation.RECOVER_PASSWORD_ROUTE
-import pt.ipca.movefit.presentation.DASHBOARD_ROUTE // Para navegação para o Dashboard
+import pt.ipca.movefit.presentation.DASHBOARD_ROUTE
+import pt.ipca.movefit.presentation.REGISTER_ROUTE
+import pt.ipca.movefit.presentation.LOGIN_ROUTE
 
 @Composable
 fun LoginScreen(
@@ -111,7 +113,10 @@ fun LoginScreen(
                 Button(
                     onClick = {
                         // Validar dados de login e navegar para o Dashboard
-                        navController.navigate(DASHBOARD_ROUTE)
+                        navController.navigate(DASHBOARD_ROUTE) {
+                            // Remove todas as telas até login
+                            popUpTo(LOGIN_ROUTE)
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(id = R.color.green_primary)
@@ -121,9 +126,12 @@ fun LoginScreen(
                     Text("Iniciar Sessão", color = Color.White)
                 }
 
-                // Botão para criar conta
+                // Botão para criar conta - Atualizado para navegar corretamente
                 Button(
-                    onClick = { navController.navigate("register") },
+                    onClick = {
+                        // Navega para a tela de registro
+                        navController.navigate(REGISTER_ROUTE)
+                    },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = colorResource(id = R.color.green_primary)
                     ),
@@ -178,7 +186,7 @@ fun BottomIcons() {
                 modifier = Modifier.size(32.dp)
             )
             Icon(
-                painter = painterResource(id = R.drawable.andar),
+                painter = painterResource(id = R.drawable.casa),
                 contentDescription = "Início",
                 tint = colorResource(id = R.color.green_primary),
                 modifier = Modifier.size(32.dp)
