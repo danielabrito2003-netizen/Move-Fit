@@ -1,25 +1,24 @@
 package pt.ipca.movefit.presentation.login
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -35,24 +34,31 @@ fun LoginScreen(
     navController: NavHostController,
     loginViewModel: LoginViewModel = viewModel()
 ) {
+    val context = LocalContext.current
+    val activity = context as? ComponentActivity
+
     val email = loginViewModel.email.collectAsState()
     val password = loginViewModel.password.collectAsState()
+
+    val lightGreen = colorResource(id = R.color.light_green_background)
+    val darkGreen = colorResource(id = R.color.green_primary)
+    val white = colorResource(id = R.color.white)
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.light_green_background))
+            .background(lightGreen)
     ) {
         TopIcons()
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 32.dp)
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Logo da aplicação
+            Spacer(modifier = Modifier.height(16.dp))
+
             Image(
                 painter = painterResource(id = R.drawable.andar),
                 contentDescription = "Ícone Move&Fit",
@@ -61,83 +67,75 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Título da aplicação
             Text(
                 text = "Move&Fit",
-                fontSize = 24.sp,
+                fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                modifier = Modifier.padding(bottom = 16.dp)
+                color = Color.Black
             )
 
-            // Campo para o e-mail
-            OutlinedTextField(
+            Spacer(modifier = Modifier.height(24.dp))
+
+            CustomLoginField(
                 value = email.value,
                 onValueChange = { loginViewModel.onEmailChanged(it) },
-                label = { Text("Email") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp)
+                placeholder = "Email"
             )
 
-            // Campo para a palavra-passe
-            OutlinedTextField(
+            Spacer(modifier = Modifier.height(16.dp))
+
+            CustomLoginField(
                 value = password.value,
                 onValueChange = { loginViewModel.onPasswordChanged(it) },
-                label = { Text("Palavra-passe") },
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth()
+                placeholder = "Palavra-passe",
+                isPassword = true
             )
 
-            // Link para "Recuperar Palavra-passe"
-            ClickableText(
-                text = AnnotatedString("Recuperar Palavra-passe"),
-                onClick = {
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = "Recuperar Palavra-passe",
+                color = darkGreen,
+                fontSize = 14.sp,
+                modifier = Modifier.clickable {
                     navController.navigate(RECOVER_PASSWORD_ROUTE)
-                },
-                modifier = Modifier
-                    .padding(top = 8.dp, bottom = 24.dp),
-                style = TextStyle(
-                    color = colorResource(id = R.color.green_primary),
-                    fontSize = 14.sp,
-                    textAlign = TextAlign.Center
-                )
+                }
             )
 
-            // Botões de ação
+            Spacer(modifier = Modifier.height(24.dp))
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                // Botão para iniciar sessão
                 Button(
                     onClick = {
-                        // Validar dados de login e navegar para o Dashboard
                         navController.navigate(DASHBOARD_ROUTE) {
-                            // Remove todas as telas até login
                             popUpTo(LOGIN_ROUTE)
                         }
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(id = R.color.green_primary)
+                        containerColor = darkGreen,
+                        contentColor = white
                     ),
-                    shape = MaterialTheme.shapes.medium
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.width(140.dp)
                 ) {
-                    Text("Iniciar Sessão", color = Color.White)
+                    Text("Iniciar Sessão", fontWeight = FontWeight.Bold, color = Color.White)
                 }
 
-                // Botão para criar conta - Atualizado para navegar corretamente
                 Button(
                     onClick = {
-                        // Navega para a tela de registro
                         navController.navigate(REGISTER_ROUTE)
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(id = R.color.green_primary)
+                        containerColor = darkGreen,
+                        contentColor = white
                     ),
-                    shape = MaterialTheme.shapes.medium
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.width(140.dp)
                 ) {
-                    Text("Criar Conta", color = Color.White)
+                    Text("Criar Conta", fontWeight = FontWeight.Bold, color = Color.White)
                 }
             }
         }
@@ -147,7 +145,49 @@ fun LoginScreen(
 }
 
 @Composable
+fun CustomLoginField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String,
+    isPassword: Boolean = false
+) {
+    val white = colorResource(id = R.color.white)
+    val lightGray = Color(0xFFAAAAAA)
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth(0.9f)
+            .shadow(2.dp, RoundedCornerShape(8.dp))
+            .background(white, shape = RoundedCornerShape(8.dp))
+            .border(2.dp, lightGray, shape = RoundedCornerShape(8.dp))
+    ) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            placeholder = {
+                Text(text = placeholder, fontSize = 14.sp, color = Color.Gray)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            singleLine = true,
+            visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedContainerColor = white,
+                focusedContainerColor = white,
+                unfocusedBorderColor = Color.Transparent,
+                focusedBorderColor = Color.Transparent
+            )
+        )
+    }
+}
+
+@Composable
 fun TopIcons() {
+    val context = LocalContext.current
+    val activity = context as? ComponentActivity
+    val darkGreen = colorResource(id = R.color.green_primary)
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -157,13 +197,17 @@ fun TopIcons() {
         Icon(
             painter = painterResource(id = R.drawable.porta),
             contentDescription = "Logout",
-            tint = colorResource(id = R.color.green_primary),
-            modifier = Modifier.size(32.dp)
+            tint = darkGreen,
+            modifier = Modifier
+                .size(32.dp)
+                .clickable {
+                    activity?.finishAffinity()
+                }
         )
         Icon(
             painter = painterResource(id = R.drawable.settings),
             contentDescription = "Definições",
-            tint = colorResource(id = R.color.green_primary),
+            tint = darkGreen,
             modifier = Modifier.size(32.dp)
         )
     }
@@ -171,6 +215,8 @@ fun TopIcons() {
 
 @Composable
 fun BottomIcons() {
+    val darkGreen = colorResource(id = R.color.green_primary)
+
     Box(modifier = Modifier.fillMaxSize()) {
         Row(
             modifier = Modifier
@@ -179,24 +225,6 @@ fun BottomIcons() {
                 .padding(bottom = 16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.seta),
-                contentDescription = "Voltar",
-                tint = colorResource(id = R.color.green_primary),
-                modifier = Modifier.size(32.dp)
-            )
-            Icon(
-                painter = painterResource(id = R.drawable.casa),
-                contentDescription = "Início",
-                tint = colorResource(id = R.color.green_primary),
-                modifier = Modifier.size(32.dp)
-            )
-            Icon(
-                painter = painterResource(id = R.drawable.menu),
-                contentDescription = "Menu",
-                tint = colorResource(id = R.color.green_primary),
-                modifier = Modifier.size(32.dp)
-            )
         }
     }
 }

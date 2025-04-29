@@ -1,4 +1,4 @@
-package pt.ipca.movefit.presentation.login
+package pt.ipca.movefit.presentation.profile
 
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
@@ -24,17 +24,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import pt.ipca.movefit.R
-import pt.ipca.movefit.presentation.LOGIN_ROUTE
-import pt.ipca.movefit.presentation.VERIFY_CODE_ROUTE
+import androidx.compose.foundation.Image
+import pt.ipca.movefit.presentation.DASHBOARD_ROUTE
 
 @Composable
-fun RecoverPasswordScreen(navController: NavController) {
+fun EditProfileScreen(navController: NavController) {
     val lightGreen = colorResource(id = R.color.light_green_background)
     val darkGreen = colorResource(id = R.color.dark_green)
     val white = colorResource(id = R.color.white)
     val lightGray = Color(0xFFAAAAAA)
 
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
+    var weight by remember { mutableStateOf("") }
+    var height by remember { mutableStateOf("") }
 
     val context = LocalContext.current
     val activity = context as? ComponentActivity
@@ -73,62 +77,46 @@ fun RecoverPasswordScreen(navController: NavController) {
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
+            Image(
+                painter = painterResource(id = R.drawable.profile),
+                contentDescription = "Avatar",
                 modifier = Modifier
-                    .fillMaxWidth(0.9f)
-                    .shadow(2.dp, RoundedCornerShape(8.dp))
-                    .background(white, shape = RoundedCornerShape(8.dp))
-                    .border(2.dp, lightGray, shape = RoundedCornerShape(8.dp))
-            ) {
-                OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    placeholder = {
-                        Text("Email", fontSize = 14.sp, color = Color.Gray)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    singleLine = true,
-                    visualTransformation = VisualTransformation.None,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = white,
-                        focusedContainerColor = white,
-                        unfocusedBorderColor = Color.Transparent,
-                        focusedBorderColor = Color.Transparent
-                    )
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "Texto informativo: \"Receberás um e-mail com um código para redefinir a tua palavra-passe\"",
-                fontSize = 12.sp,
-                color = Color.Gray,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 32.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "Voltar ao Login",
-                fontSize = 14.sp,
-                color = darkGreen,
-                textDecoration = TextDecoration.Underline,
-                modifier = Modifier.clickable {
-                    navController.navigate(LOGIN_ROUTE) {
-                        popUpTo(LOGIN_ROUTE) { inclusive = true }
-                    }
-                }
+                    .size(80.dp)
+                    .clip(CircleShape)
+                    .background(white)
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            ProfileField(value = name, onValueChange = { name = it }, placeholder = "Nome")
+            Spacer(modifier = Modifier.height(12.dp))
+            ProfileField(value = email, onValueChange = { email = it }, placeholder = "Email")
+            Spacer(modifier = Modifier.height(12.dp))
+            ProfileField(value = phone, onValueChange = { phone = it }, placeholder = "Telemóvel")
+            Spacer(modifier = Modifier.height(12.dp))
+            ProfileField(value = weight, onValueChange = { weight = it }, placeholder = "Peso")
+            Spacer(modifier = Modifier.height(12.dp))
+            ProfileField(value = height, onValueChange = { height = it }, placeholder = "Altura")
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "Voltar",
+                color = darkGreen,
+                fontSize = 14.sp,
+                textDecoration = TextDecoration.Underline,
+                modifier = Modifier.clickable {
+                    navController.navigate(DASHBOARD_ROUTE) {
+                        popUpTo(DASHBOARD_ROUTE) { inclusive = true }
+                    }
+                }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Button(
                 onClick = {
-                    navController.navigate(VERIFY_CODE_ROUTE)
+                    // TODO: Guardar alterações
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = darkGreen,
@@ -136,11 +124,11 @@ fun RecoverPasswordScreen(navController: NavController) {
                 ),
                 modifier = Modifier
                     .height(48.dp)
-                    .width(220.dp),
+                    .width(200.dp),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
-                    text = "Enviar Código",
+                    text = "Guardar Alterações",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
@@ -163,11 +151,7 @@ fun RecoverPasswordScreen(navController: NavController) {
                 tint = darkGreen,
                 modifier = Modifier
                     .size(28.dp)
-                    .clickable {
-                        navController.navigate(LOGIN_ROUTE) {
-                            popUpTo(LOGIN_ROUTE) { inclusive = true }
-                        }
-                    }
+                    .clickable { navController.popBackStack() }
             )
 
             Icon(
@@ -184,5 +168,46 @@ fun RecoverPasswordScreen(navController: NavController) {
                 modifier = Modifier.size(28.dp)
             )
         }
+    }
+}
+
+@Composable
+fun ProfileField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String
+) {
+    val white = colorResource(id = R.color.white)
+    val lightGray = Color(0xFFAAAAAA)
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth(0.9f)
+            .shadow(elevation = 2.dp, shape = RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(8.dp))
+            .background(white)
+            .border(width = 2.dp, color = lightGray, shape = RoundedCornerShape(8.dp))
+    ) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    fontSize = 14.sp,
+                    color = Color.Gray
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                unfocusedContainerColor = white,
+                focusedContainerColor = white,
+                unfocusedBorderColor = Color.Transparent,
+                focusedBorderColor = Color.Transparent
+            ),
+            singleLine = true
+        )
     }
 }

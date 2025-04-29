@@ -15,26 +15,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import pt.ipca.movefit.R
+import pt.ipca.movefit.presentation.ACTIVITY_ROUTE
+import pt.ipca.movefit.presentation.EDIT_PROFILE_ROUTE
 
 @Composable
 fun DashboardScreen(
     navController: NavController,
     viewModel: DashboardViewModel = viewModel()
 ) {
-    // Utilizar cores definidas no arquivo colors.xml
     val lightGreenBackground = colorResource(id = R.color.light_green_background)
     val darkGreen = colorResource(id = R.color.dark_green)
     val white = colorResource(id = R.color.white)
     val black = colorResource(id = R.color.black)
+
+    var showSettingsMenu by remember { mutableStateOf(false) }
+    var notificationsEnabled by remember { mutableStateOf(true) }
 
     Box(
         modifier = Modifier
@@ -46,31 +51,60 @@ fun DashboardScreen(
                 .fillMaxSize()
                 .padding(top = 32.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
-            // Barra superior com ícones
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Quadrado verde à esquerda
-                Box(
+                Icon(
+                    painter = painterResource(id = R.drawable.iconeverde),
+                    contentDescription = "Logo",
+                    tint = darkGreen,
                     modifier = Modifier
-                        .size(24.dp)
-                        .background(darkGreen)
+                        .size(32.dp)
+                        .clip(CircleShape)
                 )
 
-                // Ícone de engrenagem (configurações) à direita
-                Icon(
-                    painter = painterResource(id = R.drawable.settings),
-                    contentDescription = "Configurações",
-                    tint = darkGreen,
-                    modifier = Modifier.size(28.dp)
-                )
+                Box(
+                    modifier = Modifier.wrapContentSize(Alignment.TopEnd)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.settings),
+                        contentDescription = "Definições",
+                        tint = darkGreen,
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clickable { showSettingsMenu = true }
+                    )
+
+                    DropdownMenu(
+                        expanded = showSettingsMenu,
+                        onDismissRequest = { showSettingsMenu = false },
+                        modifier = Modifier
+                            .background(white)
+                            .width(200.dp)
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Editar Perfil", fontSize = 14.sp, color = Color.Black) },
+                            onClick = {
+                                showSettingsMenu = false
+                                navController.navigate(EDIT_PROFILE_ROUTE)
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.profile),
+                                    contentDescription = "Perfil",
+                                    tint = darkGreen,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Título Dashboard à esquerda, quadrado verde à direita
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -83,7 +117,6 @@ fun DashboardScreen(
                     color = black
                 )
 
-                // Quadrado verde à direita
                 Box(
                     modifier = Modifier
                         .size(40.dp)
@@ -94,7 +127,6 @@ fun DashboardScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Barra de pesquisa com sombra e lupa à direita
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -130,7 +162,6 @@ fun DashboardScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Título Categorias de Saúde
             Text(
                 text = "Categorias de Saúde",
                 fontSize = 20.sp,
@@ -140,14 +171,14 @@ fun DashboardScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Lista de categorias com rolagem
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
             ) {
-                // Categorias (usando valores fixos para garantir que tudo funcione)
-                SimpleCategoryCard("Monitorização de Atividades", darkGreen)
+                SimpleCategoryCard("Monitorização de Atividades", darkGreen) {
+                    navController.navigate(ACTIVITY_ROUTE)
+                }
                 SimpleCategoryCard("Planos de Treino Personalizados", darkGreen)
                 SimpleCategoryCard("Sincronização com Dispositivos Wearables", darkGreen)
                 SimpleCategoryCard("Análise de Estatísticas e Desempenho", darkGreen)
@@ -155,12 +186,10 @@ fun DashboardScreen(
                 SimpleCategoryCard("Nutrição e Bem-estar", darkGreen)
                 SimpleCategoryCard("Modo Comunitário e Social", darkGreen)
 
-                // Espaço no final
                 Spacer(modifier = Modifier.height(60.dp))
             }
         }
 
-        // Barra de navegação inferior
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -170,15 +199,13 @@ fun DashboardScreen(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Seta para a esquerda
             Icon(
-                painter = painterResource(id = R.drawable.seta),
+                painter = painterResource(id = R.drawable.seta2),
                 contentDescription = "Voltar",
                 tint = darkGreen,
                 modifier = Modifier.size(28.dp)
             )
 
-            // Ícone da casa
             Icon(
                 painter = painterResource(id = R.drawable.casa),
                 contentDescription = "Início",
@@ -186,7 +213,6 @@ fun DashboardScreen(
                 modifier = Modifier.size(40.dp)
             )
 
-            // Ícone de menu
             Icon(
                 painter = painterResource(id = R.drawable.menu),
                 contentDescription = "Menu",
@@ -197,21 +223,16 @@ fun DashboardScreen(
     }
 }
 
-// Componente simplificado para os cartões de categoria (garante quadrado verde e seta)
 @Composable
-fun SimpleCategoryCard(name: String, darkGreen: Color) {
+fun SimpleCategoryCard(name: String, darkGreen: Color, onClick: (() -> Unit)? = null) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp)
-            .clickable { /* Ação ao clicar */ },
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        ),
+            .clickable { onClick?.invoke() },
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 2.dp
-        )
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
             modifier = Modifier
@@ -220,19 +241,13 @@ fun SimpleCategoryCard(name: String, darkGreen: Color) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Quadrado verde como ícone (simples e garantido)
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
                         .size(24.dp)
                         .background(darkGreen)
                 )
-
                 Spacer(modifier = Modifier.width(12.dp))
-
-                // Nome da categoria
                 Text(
                     text = name,
                     color = Color.Gray,
@@ -241,7 +256,6 @@ fun SimpleCategoryCard(name: String, darkGreen: Color) {
                 )
             }
 
-            // Seta para a direita (usando um ícone simples de seta)
             Icon(
                 painter = painterResource(id = R.drawable.seta),
                 contentDescription = "Ir para $name",
