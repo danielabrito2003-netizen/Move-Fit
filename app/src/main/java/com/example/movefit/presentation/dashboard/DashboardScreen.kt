@@ -15,18 +15,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import pt.ipca.movefit.R
-import pt.ipca.movefit.presentation.ACTIVITY_ROUTE
-import pt.ipca.movefit.presentation.EDIT_PROFILE_ROUTE
+import pt.ipca.movefit.presentation.*
 
 @Composable
 fun DashboardScreen(
@@ -57,7 +55,7 @@ fun DashboardScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.iconeverde),
+                    painter = painterResource(id = R.drawable.porta),
                     contentDescription = "Logo",
                     tint = darkGreen,
                     modifier = Modifier
@@ -65,9 +63,7 @@ fun DashboardScreen(
                         .clip(CircleShape)
                 )
 
-                Box(
-                    modifier = Modifier.wrapContentSize(Alignment.TopEnd)
-                ) {
+                Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
                     Icon(
                         painter = painterResource(id = R.drawable.settings),
                         contentDescription = "Definições",
@@ -82,7 +78,7 @@ fun DashboardScreen(
                         onDismissRequest = { showSettingsMenu = false },
                         modifier = Modifier
                             .background(white)
-                            .width(200.dp)
+                            .width(250.dp)
                     ) {
                         DropdownMenuItem(
                             text = { Text("Editar Perfil", fontSize = 14.sp, color = Color.Black) },
@@ -98,6 +94,40 @@ fun DashboardScreen(
                                     modifier = Modifier.size(20.dp)
                                 )
                             }
+                        )
+
+                        DropdownMenuItem(
+                            text = { Text("Alterar Palavra-passe", fontSize = 14.sp, color = Color.Black) },
+                            onClick = {
+                                showSettingsMenu = false
+                                navController.navigate(CHANGE_PASSWORD_ROUTE)
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.settings),
+                                    contentDescription = "Alterar Palavra-passe",
+                                    tint = darkGreen,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        )
+
+                        DropdownMenuItem(
+                            text = {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text("Notificações", fontSize = 14.sp, color = Color.Black)
+                                    Switch(
+                                        checked = notificationsEnabled,
+                                        onCheckedChange = { notificationsEnabled = it },
+                                        thumbContent = null
+                                    )
+                                }
+                            },
+                            onClick = {}
                         )
                     }
                 }
@@ -179,12 +209,24 @@ fun DashboardScreen(
                 SimpleCategoryCard("Monitorização de Atividades", darkGreen) {
                     navController.navigate(ACTIVITY_ROUTE)
                 }
-                SimpleCategoryCard("Planos de Treino Personalizados", darkGreen)
-                SimpleCategoryCard("Sincronização com Dispositivos Wearables", darkGreen)
-                SimpleCategoryCard("Análise de Estatísticas e Desempenho", darkGreen)
-                SimpleCategoryCard("Gamificação e Desafios", darkGreen)
-                SimpleCategoryCard("Nutrição e Bem-estar", darkGreen)
-                SimpleCategoryCard("Modo Comunitário e Social", darkGreen)
+                SimpleCategoryCard("Planos de Treino Personalizados", darkGreen) {
+                    navController.navigate(PLAN_ROUTE)
+                }
+                SimpleCategoryCard("Sincronização com Dispositivos Wearables", darkGreen) {
+                    navController.navigate(SYNC_WEARABLES_ROUTE)
+                }
+                SimpleCategoryCard("Análise de Estatísticas e Desempenho", darkGreen) {
+                    navController.navigate(STATISTICS_ROUTE) // ✅ rota correta
+                }
+                SimpleCategoryCard("Gamificação e Desafios", darkGreen) {
+                    navController.navigate(GAMIFICATION_ROUTE)
+                }
+                SimpleCategoryCard("Nutrição e Bem-estar", darkGreen) {
+                    navController.navigate(NUTRITION_ROUTE)
+                }
+                SimpleCategoryCard("Modo Comunitário e Social", darkGreen) {
+                    // Placeholder
+                }
 
                 Spacer(modifier = Modifier.height(60.dp))
             }
@@ -205,14 +247,12 @@ fun DashboardScreen(
                 tint = darkGreen,
                 modifier = Modifier.size(28.dp)
             )
-
             Icon(
                 painter = painterResource(id = R.drawable.casa),
                 contentDescription = "Início",
                 tint = darkGreen,
                 modifier = Modifier.size(40.dp)
             )
-
             Icon(
                 painter = painterResource(id = R.drawable.menu),
                 contentDescription = "Menu",

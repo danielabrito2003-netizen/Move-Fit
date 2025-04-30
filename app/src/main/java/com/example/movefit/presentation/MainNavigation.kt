@@ -6,13 +6,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.movefit.presentation.activity.SyncWearablesScreen
 import com.example.movefit.presentation.activity.GamificationScreen
+import pt.ipca.movefit.presentation.activity.StatisticsScreen
 import pt.ipca.movefit.presentation.activity.ActivityScreen
-import pt.ipca.movefit.presentation.login.*
 import pt.ipca.movefit.presentation.dashboard.DashboardScreen
+import pt.ipca.movefit.presentation.login.*
 import pt.ipca.movefit.presentation.profile.EditProfileScreen
 import pt.ipca.movefit.presentation.register.RegisterScreen
+import pt.ipca.movefit.presentation.plan.*
 
-// Constantes para as rotas de navegação
 const val LOGIN_ROUTE = "login"
 const val RECOVER_PASSWORD_ROUTE = "recover_password"
 const val VERIFY_CODE_ROUTE = "verify_code"
@@ -24,6 +25,12 @@ const val CHANGE_PASSWORD_ROUTE = "change_password"
 const val SYNC_WEARABLES_ROUTE = "sync_wearables"
 const val GAMIFICATION_ROUTE = "gamification"
 const val ACTIVITY_ROUTE = "activity"
+const val PLAN_ROUTE = "plan"
+const val PLAN_DETAIL_ROUTE = "plan_detail"
+const val MASS_GAIN_ROUTE = "mass_gain"
+const val RESISTANCE_ROUTE = "resistance"
+const val STATISTICS_ROUTE = "statistics"
+const val NUTRITION_ROUTE = "nutrition"
 
 @Composable
 fun MainNavigation(navController: NavHostController) {
@@ -76,6 +83,21 @@ fun MainNavigation(navController: NavHostController) {
         }
         composable(ACTIVITY_ROUTE) {
             ActivityScreen(navController = navController)
+        }
+        composable(PLAN_ROUTE) {
+            PlanScreen(navController = navController)
+        }
+        composable(PLAN_DETAIL_ROUTE) {
+            PlanDetailScreen(navController = navController)
+        }
+        composable(MASS_GAIN_ROUTE) {
+            MassGainScreen(navController = navController)
+        }
+        composable(RESISTANCE_ROUTE) {
+            ResistanceScreen(navController = navController)
+        }
+        composable(STATISTICS_ROUTE) {
+            StatisticsScreen(navController = navController)
         }
     }
 }
