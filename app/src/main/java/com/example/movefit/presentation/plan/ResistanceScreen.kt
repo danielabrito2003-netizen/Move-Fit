@@ -30,7 +30,7 @@ fun ResistanceScreen(navController: NavController) {
                 .fillMaxSize()
                 .padding(horizontal = 16.dp, vertical = 32.dp)
         ) {
-            // Ícones topo
+            // Ícones do topo
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -63,15 +63,15 @@ fun ResistanceScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(32.dp))
 
             // Lista de exercícios
-            ExerciseCard("Passadeira", tempo = 10)
-            ExerciseCard("Agachamento na Smith Machine", series = 3, repeticoes = 15, intervalo = 30)
-            ExerciseCard("Press Peito Inclinado na Máquina", series = 3, repeticoes = 15, intervalo = 30)
-            ExerciseCard("Remo", tempo = 10)
+            ExerciseCardTempo("Passadeira", tempo = 10)
+            ExerciseCardSeries("Agachamento na Smith Machine", series = 3, repeticoes = 15, intervalo = 30)
+            ExerciseCardSeries("Press Peito Inclinado na Máquina", series = 3, repeticoes = 15, intervalo = 30)
+            ExerciseCardTempo("Remo", tempo = 10)
 
             Spacer(modifier = Modifier.weight(1f))
         }
 
-        // Barra inferior
+        // Barra de navegação inferior
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -97,5 +97,29 @@ fun ResistanceScreen(navController: NavController) {
                 modifier = Modifier.size(28.dp)
             )
         }
+    }
+}
+
+/**
+ * Cartão de exercício com tempo (ex: Passadeira)
+ */
+@Composable
+fun ExerciseCardTempo(nome: String, tempo: Int) {
+    Column(modifier = Modifier.padding(8.dp)) {
+        Text(text = nome, fontWeight = FontWeight.Bold)
+        Text(text = "Tempo: $tempo minutos")
+    }
+}
+
+/**
+ * Cartão de exercício com séries, repetições e intervalo
+ */
+@Composable
+fun ExerciseCardSeries(nome: String, series: Int, repeticoes: Int, intervalo: Int) {
+    Column(modifier = Modifier.padding(8.dp)) {
+        Text(text = nome, fontWeight = FontWeight.Bold)
+        Text(text = "Séries: $series")
+        Text(text = "Repetições: $repeticoes")
+        Text(text = "Intervalo: $intervalo segundos")
     }
 }

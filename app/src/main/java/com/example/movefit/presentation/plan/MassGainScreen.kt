@@ -30,7 +30,7 @@ fun MassGainScreen(navController: NavController) {
                 .fillMaxSize()
                 .padding(horizontal = 16.dp, vertical = 32.dp)
         ) {
-            // Top icons
+            // Ícones do topo
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -62,14 +62,14 @@ fun MassGainScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(32.dp))
 
             // Lista de exercícios
-            ExerciseCard("Passadeira", tempo = 10)
-            ExerciseCard("Tríceps Cabo", series = 3, repeticoes = 15, intervalo = 30)
-            ExerciseCard("Afundos (LUNGE)", series = 3, repeticoes = 15, intervalo = 30)
+            ExerciseCardTempo("Passadeira", tempo = 10)
+            ExerciseCardSeries("Tríceps Cabo", series = 3, repeticoes = 15, intervalo = 30)
+            ExerciseCardSeries("Afundos (LUNGE)", series = 3, repeticoes = 15, intervalo = 30)
 
             Spacer(modifier = Modifier.weight(1f))
         }
 
-        // Bottom navigation
+        // Barra de navegação inferior
         Row(
             modifier = Modifier
                 .fillMaxWidth()

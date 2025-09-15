@@ -1,6 +1,7 @@
 package pt.ipca.movefit.presentation.profile
 
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,16 +25,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import pt.ipca.movefit.R
-import androidx.compose.foundation.Image
-import pt.ipca.movefit.presentation.DASHBOARD_ROUTE
+import pt.ipca.movefit.presentation.Routes.DASHBOARD_ROUTE // ✅ Rota importada corretamente
 
+/**
+ * Ecrã de edição de perfil onde o utilizador pode alterar os seus dados pessoais.
+ */
 @Composable
 fun EditProfileScreen(navController: NavController) {
+    // Cores do tema
     val lightGreen = colorResource(id = R.color.light_green_background)
     val darkGreen = colorResource(id = R.color.dark_green)
     val white = colorResource(id = R.color.white)
     val lightGray = Color(0xFFAAAAAA)
 
+    // Estados dos campos do formulário
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
@@ -48,7 +53,7 @@ fun EditProfileScreen(navController: NavController) {
             .fillMaxSize()
             .background(lightGreen)
     ) {
-        // Top Icons fixos
+        // Ícones superiores fixos (logout e definições)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -71,12 +76,14 @@ fun EditProfileScreen(navController: NavController) {
             )
         }
 
+        // Formulário principal
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Avatar do utilizador (imagem de perfil)
             Image(
                 painter = painterResource(id = R.drawable.profile),
                 contentDescription = "Avatar",
@@ -88,6 +95,7 @@ fun EditProfileScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Campos de entrada de dados
             ProfileField(value = name, onValueChange = { name = it }, placeholder = "Nome")
             Spacer(modifier = Modifier.height(12.dp))
             ProfileField(value = email, onValueChange = { email = it }, placeholder = "Email")
@@ -100,6 +108,7 @@ fun EditProfileScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Link para voltar ao dashboard
             Text(
                 text = "Voltar",
                 color = darkGreen,
@@ -107,16 +116,17 @@ fun EditProfileScreen(navController: NavController) {
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier.clickable {
                     navController.navigate(DASHBOARD_ROUTE) {
-                        popUpTo(DASHBOARD_ROUTE) { inclusive = true }
+                        popUpTo(DASHBOARD_ROUTE) { inclusive = true } // ✅ Remove o ecrã atual da pilha
                     }
                 }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Botão para guardar alterações (não funcional por agora)
             Button(
                 onClick = {
-                    // TODO: Guardar alterações
+                    // TODO: Guardar alterações no perfil do utilizador
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = darkGreen,
@@ -136,6 +146,7 @@ fun EditProfileScreen(navController: NavController) {
             }
         }
 
+        // Barra de navegação inferior (voltar, casa, menu)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -153,14 +164,12 @@ fun EditProfileScreen(navController: NavController) {
                     .size(28.dp)
                     .clickable { navController.popBackStack() }
             )
-
             Icon(
                 painter = painterResource(id = R.drawable.casa),
                 contentDescription = "Início",
                 tint = darkGreen,
                 modifier = Modifier.size(40.dp)
             )
-
             Icon(
                 painter = painterResource(id = R.drawable.menu),
                 contentDescription = "Menu",
@@ -171,6 +180,9 @@ fun EditProfileScreen(navController: NavController) {
     }
 }
 
+/**
+ * Campo reutilizável para edição de dados do perfil.
+ */
 @Composable
 fun ProfileField(
     value: String,

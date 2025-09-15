@@ -24,17 +24,22 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import pt.ipca.movefit.R
-import pt.ipca.movefit.presentation.LOGIN_ROUTE
+import pt.ipca.movefit.presentation.Routes.LOGIN_ROUTE
+import pt.ipca.movefit.presentation.Routes.DASHBOARD_ROUTE
 
+/**
+ * Ecrã de Registo de novo utilizador.
+ * Permite ao utilizador criar uma nova conta preenchendo os dados pessoais.
+ */
 @Composable
 fun RegisterScreen(
     navController: NavController,
     registerViewModel: RegisterViewModel = viewModel()
 ) {
+    // Definição das cores utilizadas no layout
     val lightGreenBackground = colorResource(id = R.color.light_green_background)
     val darkGreen = colorResource(id = R.color.dark_green)
     val white = colorResource(id = R.color.white)
-    val lightGray = Color(0xFFAAAAAA)
 
     Box(
         modifier = Modifier
@@ -47,6 +52,7 @@ fun RegisterScreen(
                 .padding(top = 32.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Linha superior com ícones de logout e definições
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -60,7 +66,7 @@ fun RegisterScreen(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.porta),
-                        contentDescription = "Logo Move&Fit",
+                        contentDescription = "Logout",
                         tint = darkGreen,
                         modifier = Modifier
                             .size(24.dp)
@@ -75,7 +81,7 @@ fun RegisterScreen(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.settings),
-                        contentDescription = "Configurações",
+                        contentDescription = "Definições",
                         tint = darkGreen,
                         modifier = Modifier
                             .size(28.dp)
@@ -86,6 +92,7 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
+            // Campos do formulário de registo
             RegisterTextField(registerViewModel.email.value, { registerViewModel.updateEmail(it) }, "Email")
             Spacer(modifier = Modifier.height(12.dp))
             RegisterTextField(registerViewModel.password.value, { registerViewModel.updatePassword(it) }, "Palavra-passe", isPassword = true)
@@ -102,6 +109,7 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Link para voltar ao login, caso o utilizador já tenha conta
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
@@ -119,7 +127,7 @@ fun RegisterScreen(
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier.clickable {
                         navController.navigate(LOGIN_ROUTE) {
-                            popUpTo(LOGIN_ROUTE)
+                            popUpTo(LOGIN_ROUTE) { inclusive = true }
                         }
                     }
                 )
@@ -127,11 +135,12 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Botão para submeter o registo
             Button(
                 onClick = {
                     registerViewModel.register {
-                        navController.navigate("dashboard") {
-                            popUpTo(LOGIN_ROUTE)
+                        navController.navigate(DASHBOARD_ROUTE) {
+                            popUpTo(LOGIN_ROUTE) { inclusive = true }
                         }
                     }
                 },
@@ -153,6 +162,7 @@ fun RegisterScreen(
             }
         }
 
+        // Barra inferior com ícones: voltar, casa e menu
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -188,6 +198,10 @@ fun RegisterScreen(
     }
 }
 
+/**
+ * Componente reutilizável para os campos do formulário de registo.
+ * Pode ser usado para campos normais ou de palavra-passe (com máscara).
+ */
 @Composable
 fun RegisterTextField(
     value: String,

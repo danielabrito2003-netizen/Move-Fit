@@ -21,8 +21,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import pt.ipca.movefit.R
-import pt.ipca.movefit.presentation.LOGIN_ROUTE
+import pt.ipca.movefit.presentation.Routes.LOGIN_ROUTE // ✅ Correção: importação explícita
 
+/**
+ * Ecrã para alteração da palavra-passe, acessível após login.
+ */
 @Composable
 fun ChangePasswordScreen(navController: NavController) {
     val lightGreen = colorResource(id = R.color.light_green_background)
@@ -38,11 +41,11 @@ fun ChangePasswordScreen(navController: NavController) {
             .fillMaxSize()
             .background(lightGreen)
     ) {
-        // Ícones fixos no topo com padding extra
+        // Ícones superiores (Logout e Definições)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 34.dp, start = 20.dp, end = 20.dp) // ✅ mais afastado do topo
+                .padding(top = 34.dp, start = 20.dp, end = 20.dp)
                 .align(Alignment.TopCenter),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
@@ -55,7 +58,7 @@ fun ChangePasswordScreen(navController: NavController) {
                     .size(28.dp)
                     .clickable {
                         val activity = (navController.context as? androidx.activity.ComponentActivity)
-                        activity?.finishAffinity() // ✅ Fecha a app completamente
+                        activity?.finishAffinity() // ✅ Termina a aplicação
                     }
             )
             Icon(
@@ -66,7 +69,7 @@ fun ChangePasswordScreen(navController: NavController) {
             )
         }
 
-        // Conteúdo central
+        // Campos centrais para alteração de palavra-passe
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -82,6 +85,7 @@ fun ChangePasswordScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Link para voltar ao login
             Text(
                 text = "Voltar ao Login",
                 fontSize = 14.sp,
@@ -89,13 +93,16 @@ fun ChangePasswordScreen(navController: NavController) {
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier.clickable {
                     navController.navigate(LOGIN_ROUTE) {
-                        popUpTo(LOGIN_ROUTE) { inclusive = true }
+                        popUpTo(LOGIN_ROUTE) {
+                            inclusive = true // ✅ Correção de visibilidade da flag
+                        }
                     }
                 }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Botão para efetuar alteração (ação ainda por implementar)
             Button(
                 onClick = {
                     // TODO: validar e alterar palavra-passe
@@ -118,7 +125,7 @@ fun ChangePasswordScreen(navController: NavController) {
             }
         }
 
-        // Barra de navegação inferior
+        // Barra inferior com ícones de navegação
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -154,6 +161,9 @@ fun ChangePasswordScreen(navController: NavController) {
     }
 }
 
+/**
+ * Campo de texto reutilizável para palavras-passe.
+ */
 @Composable
 fun PasswordField(
     value: String,
@@ -161,11 +171,11 @@ fun PasswordField(
     placeholder: String
 ) {
     val white = colorResource(id = R.color.white)
-    val strongerGray = Color(0xFFAAAAAA) // Cinzento visível
+    val strongerGray = Color(0xFFAAAAAA)
 
     Box(
         modifier = Modifier
-            .fillMaxWidth(0.9f) // Largura reduzida
+            .fillMaxWidth(0.9f)
             .shadow(elevation = 2.dp, shape = RoundedCornerShape(8.dp))
             .clip(RoundedCornerShape(8.dp))
             .background(white)
@@ -178,7 +188,7 @@ fun PasswordField(
                 Text(
                     text = placeholder,
                     fontSize = 14.sp,
-                    color = Color.Gray // ✅ Apenas cor cinzento, sem negrito
+                    color = Color.Gray
                 )
             },
             modifier = Modifier

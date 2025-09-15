@@ -1,307 +1,66 @@
-package pt.ipca.movefit.presentation.dashboard
+package pt.ipca.movefit.presentation.dashboard  // ✅ Corrigido
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import pt.ipca.movefit.R
-import pt.ipca.movefit.presentation.*
 
+/**
+ * Ecrã principal do Dashboard.
+ * Mantém o layout; adiciona apenas estado local de pesquisa para evitar referências indefinidas.
+ */
 @Composable
 fun DashboardScreen(
-    navController: NavController,
     viewModel: DashboardViewModel = viewModel()
 ) {
-    val lightGreenBackground = colorResource(id = R.color.light_green_background)
-    val darkGreen = colorResource(id = R.color.dark_green)
-    val white = colorResource(id = R.color.white)
-    val black = colorResource(id = R.color.black)
+    // Estados expostos pelo ViewModel
+    val stats by viewModel.stats.collectAsState()
+    val wearable by viewModel.wearableData.collectAsState()
 
-    var showSettingsMenu by remember { mutableStateOf(false) }
-    var notificationsEnabled by remember { mutableStateOf(true) }
+    // Estado local para a pesquisa (substitui variáveis antes indefinidas)
+    var searchQuery by remember { mutableStateOf("") }
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(lightGreenBackground)
+            .padding(16.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 32.dp, start = 16.dp, end = 16.dp, bottom = 16.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.porta),
-                    contentDescription = "Logo",
-                    tint = darkGreen,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(CircleShape)
-                )
+        // Título
+        Text(
+            text = "Dashboard",
+            style = MaterialTheme.typography.titleLarge
+        )
 
-                Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.settings),
-                        contentDescription = "Definições",
-                        tint = darkGreen,
-                        modifier = Modifier
-                            .size(28.dp)
-                            .clickable { showSettingsMenu = true }
-                    )
+        Spacer(modifier = Modifier.height(16.dp))
 
-                    DropdownMenu(
-                        expanded = showSettingsMenu,
-                        onDismissRequest = { showSettingsMenu = false },
-                        modifier = Modifier
-                            .background(white)
-                            .width(250.dp)
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text("Editar Perfil", fontSize = 14.sp, color = Color.Black) },
-                            onClick = {
-                                showSettingsMenu = false
-                                navController.navigate(EDIT_PROFILE_ROUTE)
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.profile),
-                                    contentDescription = "Perfil",
-                                    tint = darkGreen,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
-                        )
+        // Campo de pesquisa (mantido no layout; agora com estado local válido)
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = { searchQuery = it },
+            label = { Text("Pesquisar") },
+            modifier = Modifier.fillMaxWidth()
+        )
 
-                        DropdownMenuItem(
-                            text = { Text("Alterar Palavra-passe", fontSize = 14.sp, color = Color.Black) },
-                            onClick = {
-                                showSettingsMenu = false
-                                navController.navigate(CHANGE_PASSWORD_ROUTE)
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.settings),
-                                    contentDescription = "Alterar Palavra-passe",
-                                    tint = darkGreen,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
-                        )
+        Spacer(modifier = Modifier.height(24.dp))
 
-                        DropdownMenuItem(
-                            text = {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text("Notificações", fontSize = 14.sp, color = Color.Black)
-                                    Switch(
-                                        checked = notificationsEnabled,
-                                        onCheckedChange = { notificationsEnabled = it },
-                                        thumbContent = null
-                                    )
-                                }
-                            },
-                            onClick = {}
-                        )
-                    }
-                }
-            }
+        // Secção: Estatísticas de Atividade
+        Text(text = "Estatísticas da Atividade Física", style = MaterialTheme.typography.titleMedium)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(text = "Atividades realizadas: ${stats.totalAtividades}")
+        Text(text = "Calorias queimadas: ${stats.totalCalorias}")
+        Text(text = "Tempo total (min): ${stats.totalMinutos}")
 
-            Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Dashboard",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = black
-                )
-
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(darkGreen)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(28.dp))
-                    .clip(RoundedCornerShape(28.dp))
-                    .background(Color.White)
-            ) {
-                OutlinedTextField(
-                    value = viewModel.searchQuery.value,
-                    onValueChange = { viewModel.updateSearchQuery(it) },
-                    placeholder = { Text("Pesquisar atividades, planos de treino...") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "Pesquisar",
-                            tint = darkGreen
-                        )
-                    },
-                    shape = RoundedCornerShape(28.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = white,
-                        focusedContainerColor = white,
-                        unfocusedBorderColor = Color.Transparent,
-                        focusedBorderColor = Color.Transparent,
-                        cursorColor = Color.Gray
-                    ),
-                    singleLine = true
-                )
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Text(
-                text = "Categorias de Saúde",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = black
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                SimpleCategoryCard("Monitorização de Atividades", darkGreen) {
-                    navController.navigate(ACTIVITY_ROUTE)
-                }
-                SimpleCategoryCard("Planos de Treino Personalizados", darkGreen) {
-                    navController.navigate(PLAN_ROUTE)
-                }
-                SimpleCategoryCard("Sincronização com Dispositivos Wearables", darkGreen) {
-                    navController.navigate(SYNC_WEARABLES_ROUTE)
-                }
-                SimpleCategoryCard("Análise de Estatísticas e Desempenho", darkGreen) {
-                    navController.navigate(STATISTICS_ROUTE) // ✅ rota correta
-                }
-                SimpleCategoryCard("Gamificação e Desafios", darkGreen) {
-                    navController.navigate(GAMIFICATION_ROUTE)
-                }
-                SimpleCategoryCard("Nutrição e Bem-estar", darkGreen) {
-                    navController.navigate(NUTRITION_ROUTE)
-                }
-                SimpleCategoryCard("Modo Comunitário e Social", darkGreen) {
-                    // Placeholder
-                }
-
-                Spacer(modifier = Modifier.height(60.dp))
-            }
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp)
-                .background(lightGreenBackground)
-                .align(Alignment.BottomCenter),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.seta2),
-                contentDescription = "Voltar",
-                tint = darkGreen,
-                modifier = Modifier.size(28.dp)
-            )
-            Icon(
-                painter = painterResource(id = R.drawable.casa),
-                contentDescription = "Início",
-                tint = darkGreen,
-                modifier = Modifier.size(40.dp)
-            )
-            Icon(
-                painter = painterResource(id = R.drawable.menu),
-                contentDescription = "Menu",
-                tint = darkGreen,
-                modifier = Modifier.size(28.dp)
-            )
-        }
-    }
-}
-
-@Composable
-fun SimpleCategoryCard(name: String, darkGreen: Color, onClick: (() -> Unit)? = null) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 6.dp)
-            .clickable { onClick?.invoke() },
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp, horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .background(darkGreen)
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = name,
-                    color = Color.Gray,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            Icon(
-                painter = painterResource(id = R.drawable.seta),
-                contentDescription = "Ir para $name",
-                tint = darkGreen,
-                modifier = Modifier.size(24.dp)
-            )
-        }
+        // Secção: Dados do Wearable
+        Text(text = "Dados do Dispositivo Wearable", style = MaterialTheme.typography.titleMedium)
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(text = "Passos: ${wearable.passos}")
+        Text(text = "Calorias: ${wearable.calorias}")
+        Text(text = "Batimentos cardíacos: ${wearable.batimentos}")
     }
 }

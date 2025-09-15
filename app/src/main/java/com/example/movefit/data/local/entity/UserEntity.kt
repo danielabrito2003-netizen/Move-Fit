@@ -1,7 +1,13 @@
-package com.example.movefit.data.local.entity
+package pt.ipca.movefit.data.local.entity
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "users")
 data class UserEntity(
-    val id: String,
+    @PrimaryKey val uid: String,
     val nome: String,
-    val email: String
+    val email: String,
+    val peso: Float?,
+    val altura: Float?
 )

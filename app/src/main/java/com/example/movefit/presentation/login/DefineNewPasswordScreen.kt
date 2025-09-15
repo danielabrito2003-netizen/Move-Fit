@@ -1,7 +1,9 @@
 package pt.ipca.movefit.presentation.login
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -9,19 +11,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.foundation.clickable
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.navigation.NavHostController
 import pt.ipca.movefit.R
 
+/**
+ * Ecrã para definir uma nova palavra-passe (último passo da recuperação).
+ * Permite ao utilizador escolher e confirmar uma nova palavra-passe.
+ */
 @Composable
 fun DefineNewPasswordScreen(
-    navController: NavHostController,
+    navController: NavHostController, // ✅ Recebe navController corretamente
     onBackToLogin: () -> Unit
 ) {
     var newPassword by remember { mutableStateOf("") }
@@ -30,7 +34,7 @@ fun DefineNewPasswordScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.light_green_background)) // Usando a cor do XML
+            .background(colorResource(id = R.color.light_green_background))
     ) {
         TopIcons()
 

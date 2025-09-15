@@ -1,169 +1,99 @@
 package pt.ipca.movefit.presentation.plan
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import pt.ipca.movefit.R
-import pt.ipca.movefit.presentation.MASS_GAIN_ROUTE
-import pt.ipca.movefit.presentation.PLAN_DETAIL_ROUTE
-import pt.ipca.movefit.presentation.RESISTANCE_ROUTE // ✅ nova rota importada
 
+/**
+ * Ecrã principal de seleção de planos de treino por objetivo.
+ */
 @Composable
 fun PlanScreen(
-    navController: NavController,
-    viewModel: PlanViewModel = viewModel()
+    viewModel: PlanViewModel = viewModel() // ✅ ViewModel injetado corretamente
 ) {
-    val lightGreen = colorResource(id = R.color.light_green_background)
-    val darkGreen = colorResource(id = R.color.dark_green)
+    val objetivoEscolhido by viewModel.objetivoEscolhido.collectAsState()
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(lightGreen)
+            .padding(16.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp, vertical = 32.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.porta),
-                contentDescription = "Logout",
-                modifier = Modifier.size(32.dp)
-            )
-            Image(
-                painter = painterResource(id = R.drawable.settings),
-                contentDescription = "Definições",
-                modifier = Modifier.size(28.dp)
-            )
-        }
+        Text(
+            text = "Escolhe o teu objetivo",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 88.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "Escolher Objetivo",
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black
-            )
-        }
-
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-            ) {
-                GoalOption(
-                    iconId = R.drawable.perderpeso,
-                    label = "Perder peso",
-                    onClick = {
-                        viewModel.escolherObjetivo("Perder peso")
-                        navController.navigate(PLAN_DETAIL_ROUTE)
-                    }
-                )
-                GoalOption(
-                    iconId = R.drawable.ganharmassa,
-                    label = "Ganhar Massa",
-                    onClick = {
-                        viewModel.escolherObjetivo("Ganhar Massa")
-                        navController.navigate(MASS_GAIN_ROUTE)
-                    }
-                )
-                GoalOption(
-                    iconId = R.drawable.resistencia,
-                    label = "Resistência",
-                    onClick = {
-                        viewModel.escolherObjetivo("Resistência")
-                        navController.navigate(RESISTANCE_ROUTE)
-                    }
-                )
+        // Cartão para "Perder Peso"
+        ObjetivoCard(
+            titulo = "Perder Peso",
+            imagem = R.drawable.perderpeso, // ✅ Corrigido para imagem existente
+            onClick = {
+                viewModel.escolherObjetivo("perder_peso")
+                viewModel.gerarPlano("perder_peso")
             }
-        }
+        )
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp)
-                .background(lightGreen)
-                .align(Alignment.BottomCenter),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.seta2),
-                contentDescription = "Voltar",
-                modifier = Modifier
-                    .size(28.dp)
-                    .clickable {
-                        navController.popBackStack()
-                    }
-            )
-            Image(
-                painter = painterResource(id = R.drawable.casa),
-                contentDescription = "Início",
-                modifier = Modifier
-                    .size(40.dp)
-                    .clickable {
-                        navController.navigate("dashboard")
-                    }
-            )
-            Image(
-                painter = painterResource(id = R.drawable.menu),
-                contentDescription = "Menu",
-                modifier = Modifier.size(28.dp)
-            )
-        }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Cartão para "Ganhar Massa"
+        ObjetivoCard(
+            titulo = "Ganhar Massa",
+            imagem = R.drawable.ganharmassa, // ✅ Corrigido para imagem existente
+            onClick = {
+                viewModel.escolherObjetivo("ganhar_massa")
+                viewModel.gerarPlano("ganhar_massa")
+            }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Cartão para "Resistência"
+        ObjetivoCard(
+            titulo = "Resistência",
+            imagem = R.drawable.resistencia, // ✅ Assumido correto (já existe no print)
+            onClick = {
+                viewModel.escolherObjetivo("resistencia")
+                viewModel.gerarPlano("resistencia")
+            }
+        )
     }
 }
 
+/**
+ * Composable reutilizável para representar um cartão de objetivo com imagem e título.
+ */
 @Composable
-fun GoalOption(iconId: Int, label: String, onClick: () -> Unit) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+fun ObjetivoCard(
+    titulo: String,
+    imagem: Int,
+    onClick: () -> Unit
+) {
+    Row(
         modifier = Modifier
-            .width(90.dp)
+            .fillMaxWidth()
             .clickable { onClick() }
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = painterResource(id = iconId),
-            contentDescription = label,
-            modifier = Modifier
-                .size(64.dp)
-                .clip(CircleShape)
+            painter = painterResource(id = imagem),
+            contentDescription = null,
+            modifier = Modifier.size(64.dp)
         )
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.width(16.dp))
         Text(
-            text = label,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
+            text = titulo,
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }

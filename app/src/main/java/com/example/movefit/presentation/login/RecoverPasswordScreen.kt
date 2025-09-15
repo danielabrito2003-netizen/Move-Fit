@@ -5,13 +5,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -24,16 +22,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import pt.ipca.movefit.R
-import pt.ipca.movefit.presentation.LOGIN_ROUTE
-import pt.ipca.movefit.presentation.VERIFY_CODE_ROUTE
+import pt.ipca.movefit.presentation.Routes.LOGIN_ROUTE // ✅ Correção da importação
+import pt.ipca.movefit.presentation.Routes.VERIFY_CODE_ROUTE // ✅ Correção da importação
 
+/**
+ * Ecrã para recuperação de palavra-passe.
+ * O utilizador introduz o seu email para receber um código de verificação.
+ */
 @Composable
 fun RecoverPasswordScreen(navController: NavController) {
+    // Definição das cores do tema
     val lightGreen = colorResource(id = R.color.light_green_background)
     val darkGreen = colorResource(id = R.color.dark_green)
     val white = colorResource(id = R.color.white)
     val lightGray = Color(0xFFAAAAAA)
 
+    // Estado do campo de email
     var email by remember { mutableStateOf("") }
 
     val context = LocalContext.current
@@ -44,7 +48,7 @@ fun RecoverPasswordScreen(navController: NavController) {
             .fillMaxSize()
             .background(lightGreen)
     ) {
-        // Top Icons fixos
+        // Ícones no topo: logout e definições
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -57,7 +61,7 @@ fun RecoverPasswordScreen(navController: NavController) {
                 tint = darkGreen,
                 modifier = Modifier
                     .size(32.dp)
-                    .clickable { activity?.finishAffinity() }
+                    .clickable { activity?.finishAffinity() } // ✅ Fecha a app
             )
             Icon(
                 painter = painterResource(id = R.drawable.settings),
@@ -67,12 +71,14 @@ fun RecoverPasswordScreen(navController: NavController) {
             )
         }
 
+        // Conteúdo principal
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Campo de email
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.9f)
@@ -102,6 +108,7 @@ fun RecoverPasswordScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Texto informativo
             Text(
                 text = "Texto informativo: \"Receberás um e-mail com um código para redefinir a tua palavra-passe\"",
                 fontSize = 12.sp,
@@ -112,6 +119,7 @@ fun RecoverPasswordScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Link para voltar ao login
             Text(
                 text = "Voltar ao Login",
                 fontSize = 14.sp,
@@ -119,16 +127,19 @@ fun RecoverPasswordScreen(navController: NavController) {
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier.clickable {
                     navController.navigate(LOGIN_ROUTE) {
-                        popUpTo(LOGIN_ROUTE) { inclusive = true }
+                        popUpTo(LOGIN_ROUTE) {
+                            inclusive = true // ✅ Uso correto da flag
+                        }
                     }
                 }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Botão "Enviar Código"
             Button(
                 onClick = {
-                    navController.navigate(VERIFY_CODE_ROUTE)
+                    navController.navigate(VERIFY_CODE_ROUTE) // ✅ Navega para ecrã de verificação
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = darkGreen,
@@ -148,6 +159,7 @@ fun RecoverPasswordScreen(navController: NavController) {
             }
         }
 
+        // Barra inferior com ícones
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -165,7 +177,9 @@ fun RecoverPasswordScreen(navController: NavController) {
                     .size(28.dp)
                     .clickable {
                         navController.navigate(LOGIN_ROUTE) {
-                            popUpTo(LOGIN_ROUTE) { inclusive = true }
+                            popUpTo(LOGIN_ROUTE) {
+                                inclusive = true // ✅ Correção da visibilidade
+                            }
                         }
                     }
             )

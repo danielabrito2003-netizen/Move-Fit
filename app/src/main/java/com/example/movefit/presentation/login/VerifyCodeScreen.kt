@@ -1,7 +1,9 @@
 package pt.ipca.movefit.presentation.login
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -9,19 +11,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.clickable
 import androidx.navigation.NavHostController
 import pt.ipca.movefit.R
 
+/**
+ * Ecrã para verificar o código enviado por e-mail (passo 2 da recuperação).
+ * Permite validar o código ou reenviar um novo.
+ */
 @Composable
 fun VerifyCodeScreen(
-    navController: NavHostController,
+    navController: NavHostController, // ✅ Recebe navController como pedido
     onBackToLogin: () -> Unit,
     onValidateCode: () -> Unit
 ) {
@@ -30,7 +34,7 @@ fun VerifyCodeScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.light_green_background)) // Verifique o uso correto de colorResource
+            .background(colorResource(id = R.color.light_green_background))
     ) {
         TopIcons()
 
@@ -54,7 +58,7 @@ fun VerifyCodeScreen(
                 text = "Texto explicativo: “Introduz o código que recebeste no teu e-mail para continuar”",
                 color = Color.Gray,
                 fontSize = 13.sp,
-                textAlign = TextAlign.Center, // Verifique se a importação de TextAlign está correta
+                textAlign = TextAlign.Center,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
@@ -65,7 +69,7 @@ fun VerifyCodeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text) // Garantir que KeyboardOptions está configurado corretamente
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
             )
 
             Text(
@@ -73,7 +77,7 @@ fun VerifyCodeScreen(
                 color = colorResource(id = R.color.green_primary),
                 fontSize = 14.sp,
                 modifier = Modifier
-                    .clickable { onBackToLogin() } // Verifique se a função clickable está correta
+                    .clickable { onBackToLogin() }
                     .padding(bottom = 24.dp)
             )
 
@@ -84,13 +88,13 @@ fun VerifyCodeScreen(
                 Button(
                     onClick = { onValidateCode() },
                     colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_primary)),
-                    shape = RoundedCornerShape(12.dp) // Verifique o uso correto do RoundedCornerShape
+                    shape = RoundedCornerShape(12.dp)
                 ) {
                     Text("Validar Código", color = Color.White)
                 }
 
                 Button(
-                    onClick = { },
+                    onClick = { /* lógica para reenviar código */ },
                     colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_primary)),
                     shape = RoundedCornerShape(12.dp)
                 ) {

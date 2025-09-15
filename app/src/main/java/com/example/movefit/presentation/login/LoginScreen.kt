@@ -24,11 +24,14 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import pt.ipca.movefit.R
-import pt.ipca.movefit.presentation.RECOVER_PASSWORD_ROUTE
-import pt.ipca.movefit.presentation.DASHBOARD_ROUTE
-import pt.ipca.movefit.presentation.REGISTER_ROUTE
-import pt.ipca.movefit.presentation.LOGIN_ROUTE
+import pt.ipca.movefit.presentation.Routes.LOGIN_ROUTE
+import pt.ipca.movefit.presentation.Routes.REGISTER_ROUTE
+import pt.ipca.movefit.presentation.Routes.RECOVER_PASSWORD_ROUTE
+import pt.ipca.movefit.presentation.Routes.DASHBOARD_ROUTE
 
+/**
+ * Ecrã de Login onde o utilizador pode introduzir o seu email e palavra-passe para iniciar sessão.
+ */
 @Composable
 fun LoginScreen(
     navController: NavHostController,
@@ -37,9 +40,11 @@ fun LoginScreen(
     val context = LocalContext.current
     val activity = context as? ComponentActivity
 
+    // Observar os estados do email e palavra-passe
     val email = loginViewModel.email.collectAsState()
     val password = loginViewModel.password.collectAsState()
 
+    // Cores definidas no ficheiro colors.xml
     val lightGreen = colorResource(id = R.color.light_green_background)
     val darkGreen = colorResource(id = R.color.green_primary)
     val white = colorResource(id = R.color.white)
@@ -49,7 +54,7 @@ fun LoginScreen(
             .fillMaxSize()
             .background(lightGreen)
     ) {
-        TopIcons()
+        TopIcons() // Parte superior com ícones de logout e definições
 
         Column(
             modifier = Modifier
@@ -59,6 +64,7 @@ fun LoginScreen(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Logótipo da aplicação
             Image(
                 painter = painterResource(id = R.drawable.andar),
                 contentDescription = "Ícone Move&Fit",
@@ -67,6 +73,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Título
             Text(
                 text = "Move&Fit",
                 fontSize = 28.sp,
@@ -76,6 +83,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Campo de email
             CustomLoginField(
                 value = email.value,
                 onValueChange = { loginViewModel.onEmailChanged(it) },
@@ -84,6 +92,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Campo de palavra-passe
             CustomLoginField(
                 value = password.value,
                 onValueChange = { loginViewModel.onPasswordChanged(it) },
@@ -93,6 +102,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            // Link para recuperar palavra-passe
             Text(
                 text = "Recuperar Palavra-passe",
                 color = darkGreen,
@@ -104,6 +114,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+            // Botões: Iniciar Sessão e Criar Conta
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -111,7 +122,7 @@ fun LoginScreen(
                 Button(
                     onClick = {
                         navController.navigate(DASHBOARD_ROUTE) {
-                            popUpTo(LOGIN_ROUTE)
+                            popUpTo(LOGIN_ROUTE) { inclusive = true }
                         }
                     },
                     colors = ButtonDefaults.buttonColors(
@@ -140,10 +151,13 @@ fun LoginScreen(
             }
         }
 
-        BottomIcons()
+        BottomIcons() // Ícones no rodapé (opcional)
     }
 }
 
+/**
+ * Campo reutilizável para introdução de texto com ou sem máscara de palavra-passe.
+ */
 @Composable
 fun CustomLoginField(
     value: String,
@@ -182,6 +196,9 @@ fun CustomLoginField(
     }
 }
 
+/**
+ * Ícones superiores: logout e definições.
+ */
 @Composable
 fun TopIcons() {
     val context = LocalContext.current
@@ -213,6 +230,9 @@ fun TopIcons() {
     }
 }
 
+/**
+ * Espaço reservado para os ícones de navegação no fundo do ecrã.
+ */
 @Composable
 fun BottomIcons() {
     val darkGreen = colorResource(id = R.color.green_primary)
