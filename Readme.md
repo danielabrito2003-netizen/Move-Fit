@@ -1,157 +1,249 @@
-# Move&Fit - Projeto de Estágio 2025
+# Move&Fit
 
-## Autor
-**Nome:** Daniela Brito  
-**N.º:** 25591  
-**Curso:** Licenciatura em Engenharia de Sistemas Informáticos, 3º Ano  
-**U.C.:** Programação de Dispositivos Móveis  
-**Docentes:** Professor Nuno F. Mendes, Professora Patrícia Leite  
-**Ano:** 2024/2025  
+Academic Android application developed as part of the **Mobile Device Programming** course of the Computer Systems Engineering degree.
 
+## 📌 About the Project
 
-## Introdução
-A aplicação Move&Fit tem como objetivo promover estilos de vida mais saudáveis através da monitorização de atividades físicas e da oferta de planos de treino personalizados, com integração opcional de dispositivos **wearables**. 
+**Move&Fit** is a mobile fitness application designed to promote healthier lifestyles by supporting physical activity tracking, workout plan management and nutrition-related information.
 
-A implementação é feita em **Kotlin** com **Jetpack Compose**, sem utilização de Hilt. Segue uma adaptação do padrão **Clean Architecture** dividida em três camadas principais: Presentation, Domain e Data.
+The application was developed in **Kotlin** using **Jetpack Compose** and follows an adaptation of **Clean Architecture**, separating the project into Presentation, Domain and Data layers.
 
+## ✨ Main Features
 
-## Objetivos do Projeto
-- Registo e autenticação de utilizadores  
-- Registo e análise de atividades físicas  
-- Geração de planos de treino personalizados  
-- Visualização de estatísticas  
-- Personalização da experiência (notificações, lembretes, etc.)  
-- Integração (opcional) com dispositivos **wearables**  
-- Sugestões nutricionais e boas práticas de bem-estar  
-- Sincronização de dados com **Firebase** (Autenticação e Realtime Database)  
+- User registration and authentication
+- Physical activity registration and tracking
+- Workout plan management
+- Activity statistics
+- Nutrition tips and recommendations
+- User dashboard
+- Local data persistence
+- Data synchronization with Firebase
+- Structure prepared for future integration with wearable devices
 
+## 🛠 Technologies
 
+- Kotlin
+- Android
+- Jetpack Compose
+- Firebase Authentication
+- Firebase Realtime Database
+- Room
+- Retrofit
+- Gson
+- OkHttp
+- AndroidX
+- Material 3
+- Git & GitHub
 
-```markdown
-## Estrutura de Pastas e Ficheiros
+## 🏗 Architecture
 
+Move&Fit follows an adaptation of **Clean Architecture**, organized into three main layers:
+
+- **Presentation** — Screens, ViewModels, UI components and navigation
+- **Domain** — Models, repository interfaces and use cases
+- **Data** — Local and remote data sources, repositories and database management
+
+This separation helps maintain a modular structure and a clear separation of responsibilities.
+
+## 📂 Project Structure
+
+```text
 MoveFit/
+│
 ├── app/
 │   └── src/
 │       └── main/
-│           ├── java/pt/ipca/movefit/
-│           │   ├── presentation/                   # Camada da Interface (UI)
-│           │   │   ├── login/
-│           │   │   │   ├── LoginScreen.kt          # UI do ecrã de login
-│           │   │   │   └── LoginViewModel.kt       # Lógica de autenticação
-│           │   │   ├── register/
-│           │   │   │   ├── RegisterScreen.kt       # UI para registo de novos utilizadores
-│           │   │   │   └── RegisterViewModel.kt    # Validação de formulário e lógica de registo
-│           │   │   ├── dashboard/
-│           │   │   │   ├── DashboardScreen.kt      # Ecrã principal com acesso às funcionalidades
-│           │   │   │   └── DashboardViewModel.kt   # Geração de dados para o dashboard
-│           │   │   ├── activity/
-│           │   │   │   ├── ActivityScreen.kt       # UI para registar e visualizar atividades
-│           │   │   │   └── ActivityViewModel.kt    # Gestão de estado e envio de dados de atividade
-│           │   │   ├── plan/
-│           │   │   │   ├── PlanScreen.kt           # Interface dos planos de treino
-│           │   │   │   └── PlanViewModel.kt        # Lógica para exibir ou gerar planos
-│           │   │   ├── nutrition/
-│           │   │   │   ├── NutritionScreen.kt      # UI para sugestões nutricionais
-│           │   │   │   └── NutritionViewModel.kt   # Lógica para gerir dicas de nutrição
-│           │   │   ├── ui/
-│           │   │   │   ├── components/             # Componentes reutilizáveis (cards, botões, etc.)
-│           │   │   │   └── theme/
-│           │   │   │       ├── Color.kt            # Palete de cores da app
-│           │   │   │       ├── Shape.kt            # Definição de cantos e formas
-│           │   │   │       ├── Theme.kt            # Configuração geral do tema
-│           │   │   │       └── Type.kt             # Tipografia
-│           │   │   └── MainNavigation.kt           # Gestão das rotas entre ecrãs
-│           │   ├── domain/                         # Camada de negócio
-│           │   │   ├── model/
-│           │   │   │   ├── User.kt                 # Modelo de utilizador
-│           │   │   │   ├── Activity.kt             # Modelo de atividade física
-│           │   │   │   ├── Plan.kt                 # Modelo de plano de treino
-│           │   │   │   ├── WearableData.kt         # Dados recebidos de wearables
-│           │   │   │   └── Nutrition.kt            # Modelo de sugestão nutricional
-│           │   │   ├── repository/
-│           │   │   │   ├── AuthRepository.kt       # Interface de autenticação
-│           │   │   │   ├── ActivityRepository.kt   # Interface para atividades físicas
-│           │   │   │   ├── PlanRepository.kt       # Interface para planos
-│           │   │   │   ├── WearableRepository.kt   # Interface para integração com wearables
-│           │   │   │   └── NutritionRepository.kt  # Interface para sugestões nutricionais
-│           │   │   └── usecase/
-│           │   │       ├── Auth/
-│           │   │       │   └── LoginUserUseCase.kt, RegisterUserUseCase.kt  # Casos de uso de autenticação
-│           │   │       ├── Activity/
-│           │   │       │   └── RegisterActivityUseCase.kt, GetStatsUseCase.kt # Registo e estatísticas
-│           │   │       ├── Plan/
-│           │   │       │   └── GeneratePlanUseCase.kt                        # Geração de planos
-│           │   │       ├── Wearable/
-│           │   │       │   └── SyncWearableDataUseCase.kt                    # Sincronizar com wearables
-│           │   │       └── Nutrition/
-│           │   │           └── GetNutritionTipsUseCase.kt                   # Obter sugestões de nutrição
-│           │   ├── data/                           # Camada de dados (local e remoto)
-│           │   │   ├── local/
-│           │   │   │   ├── dao/
-│           │   │   │   │   ├── ActivityDao.kt      # DAO de atividades (Room)
-│           │   │   │   │   └── PlanDao.kt          # DAO de planos (Room)
-│           │   │   │   ├── database/
-│           │   │   │   │   └── MoveFitDatabase.kt  # Configuração da base de dados Room
-│           │   │   │   └── entity/
-│           │   │   │       ├── ActivityEntity.kt   # Entidade local de atividade
-│           │   │   │       ├── PlanEntity.kt       # Entidade local de plano
-│           │   │   │       └── UserEntity.kt       # Entidade local de utilizador
-│           │   │   ├── remote/
-│           │   │   │   ├── api/
-│           │   │   │   │   ├── AuthService.kt      # Operações com Firebase Auth
-│           │   │   │   │   ├── ActivityService.kt  # Comunicação com Firebase DB (atividades)
-│           │   │   │   │   └── PlanService.kt      # Comunicação com Firebase DB (planos)
-│           │   │   │   ├── dto/
-│           │   │   │   │   ├── AuthDto.kt          # Dados de autenticação recebidos
-│           │   │   │   │   └── PlanDto.kt          # Dados de plano recebidos
-│           │   │   │   └── repository/
-│           │   │   │       ├── AuthRepositoryImpl.kt       # Implementação do repositório Auth
-│           │   │   │       ├── ActivityRepositoryImpl.kt   # Implementação das atividades
-│           │   │   │       └── PlanRepositoryImpl.kt       # Implementação dos planos
-│           │   ├── firebase/
-│           │   │   └── FirebaseConfig.kt           # Inicialização e configuração do Firebase
-│           │   ├── MyApplication.kt                # Inicialização da app
-│           │   └── MainActivity.kt                 # Entrada principal da aplicação
+│           └── java/pt/ipca/movefit/
+│
+│               ├── presentation/                   # Camada da Interface (UI)
+│               │   ├── login/
+│               │   │   ├── LoginScreen.kt          # UI do ecrã de login
+│               │   │   └── LoginViewModel.kt       # Lógica de autenticação
+│               │   │
+│               │   ├── register/
+│               │   │   ├── RegisterScreen.kt       # UI para registo de novos utilizadores
+│               │   │   └── RegisterViewModel.kt    # Validação de formulário e lógica de registo
+│               │   │
+│               │   ├── dashboard/
+│               │   │   ├── DashboardScreen.kt      # Ecrã principal com acesso às funcionalidades
+│               │   │   └── DashboardViewModel.kt   # Geração de dados para o dashboard
+│               │   │
+│               │   ├── activity/
+│               │   │   ├── ActivityScreen.kt       # UI para registar e visualizar atividades
+│               │   │   └── ActivityViewModel.kt    # Gestão de estado e envio de dados de atividade
+│               │   │
+│               │   ├── plan/
+│               │   │   ├── PlanScreen.kt           # Interface dos planos de treino
+│               │   │   └── PlanViewModel.kt        # Lógica para exibir ou gerar planos
+│               │   │
+│               │   ├── nutrition/
+│               │   │   ├── NutritionScreen.kt      # UI para sugestões nutricionais
+│               │   │   └── NutritionViewModel.kt   # Lógica para gerir dicas de nutrição
+│               │   │
+│               │   ├── ui/
+│               │   │   ├── components/             # Componentes reutilizáveis (cards, botões, etc.)
+│               │   │   └── theme/
+│               │   │       ├── Color.kt            # Palete de cores da app
+│               │   │       ├── Shape.kt            # Definição de cantos e formas
+│               │   │       ├── Theme.kt            # Configuração geral do tema
+│               │   │       └── Type.kt             # Tipografia
+│               │   │
+│               │   └── MainNavigation.kt           # Gestão das rotas entre ecrãs
+│               │
+│               ├── domain/                         # Camada de negócio
+│               │   ├── model/
+│               │   │   ├── User.kt                 # Modelo de utilizador
+│               │   │   ├── Activity.kt             # Modelo de atividade física
+│               │   │   ├── Plan.kt                 # Modelo de plano de treino
+│               │   │   ├── WearableData.kt         # Dados recebidos de wearables
+│               │   │   └── Nutrition.kt            # Modelo de sugestão nutricional
+│               │   │
+│               │   ├── repository/
+│               │   │   ├── AuthRepository.kt       # Interface de autenticação
+│               │   │   ├── ActivityRepository.kt   # Interface para atividades físicas
+│               │   │   ├── PlanRepository.kt       # Interface para planos
+│               │   │   ├── WearableRepository.kt   # Interface para integração com wearables
+│               │   │   └── NutritionRepository.kt  # Interface para sugestões nutricionais
+│               │   │
+│               │   └── usecase/
+│               │       ├── Auth/
+│               │       │   └── LoginUserUseCase.kt, RegisterUserUseCase.kt
+│               │       │       # Casos de uso de autenticação
+│               │       │
+│               │       ├── Activity/
+│               │       │   └── RegisterActivityUseCase.kt, GetStatsUseCase.kt
+│               │       │       # Registo e estatísticas
+│               │       │
+│               │       ├── Plan/
+│               │       │   └── GeneratePlanUseCase.kt
+│               │       │       # Geração de planos
+│               │       │
+│               │       ├── Wearable/
+│               │       │   └── SyncWearableDataUseCase.kt
+│               │       │       # Sincronização com wearables
+│               │       │
+│               │       └── Nutrition/
+│               │           └── GetNutritionTipsUseCase.kt
+│               │               # Obter sugestões de nutrição
+│               │
+│               ├── data/                           # Camada de dados (local e remoto)
+│               │   ├── local/
+│               │   │   ├── dao/
+│               │   │   │   ├── ActivityDao.kt      # DAO de atividades (Room)
+│               │   │   │   └── PlanDao.kt          # DAO de planos (Room)
+│               │   │   │
+│               │   │   ├── database/
+│               │   │   │   └── MoveFitDatabase.kt  # Configuração da base de dados Room
+│               │   │   │
+│               │   │   └── entity/
+│               │   │       ├── ActivityEntity.kt   # Entidade local de atividade
+│               │   │       ├── PlanEntity.kt       # Entidade local de plano
+│               │   │       └── UserEntity.kt       # Entidade local de utilizador
+│               │   │
+│               │   ├── remote/
+│               │   │   ├── api/
+│               │   │   │   ├── AuthService.kt      # Operações com Firebase Auth
+│               │   │   │   ├── ActivityService.kt  # Comunicação com Firebase DB (atividades)
+│               │   │   │   └── PlanService.kt      # Comunicação com Firebase DB (planos)
+│               │   │   │
+│               │   │   └── dto/
+│               │   │       ├── AuthDto.kt           # Dados de autenticação recebidos
+│               │   │       └── PlanDto.kt           # Dados de plano recebidos
+│               │   │
+│               │   └── repository/
+│               │       ├── AuthRepositoryImpl.kt       # Implementação do repositório Auth
+│               │       ├── ActivityRepositoryImpl.kt   # Implementação das atividades
+│               │       └── PlanRepositoryImpl.kt       # Implementação dos planos
+│               │
+│               ├── firebase/
+│               │   └── FirebaseConfig.kt           # Inicialização e configuração do Firebase
+│               │
+│               ├── MyApplication.kt                # Inicialização da app
+│               └── MainActivity.kt                 # Entrada principal da aplicação
+│
 ├── test/
 │   └── pt/ipca/movefit/
 │       └── android/dao/
 │           └── ActivityDaoTest.kt                  # Testes de base de dados
-├── .gitignore                                       # Exclusão de ficheiros sensíveis
-├── README.md                                        # Documento atual de apoio ao projeto
-└── build.gradle.kts                                 # Ficheiro de configuração do projeto
+│
+├── .gitignore                                      # Exclusão de ficheiros desnecessários/sensíveis
+├── README.md                                       # Documentação do projeto
+└── build.gradle.kts                                # Configuração do projeto
 ```
 
-## Fluxo de Dados
+## 🔄 Data Flow
 
-### 1. Início da Aplicação
-- O ciclo inicia-se em `MainActivity.kt`, que invoca o `MainNavigation.kt`.
-- A navegação entre os ecrãs é controlada por rotas definidas em `MainNavigation.kt`.
+### 1. Application Start
 
-### 2. Autenticação com Firebase
-- O utilizador interage com `LoginScreen.kt`, que invoca o `LoginViewModel.kt`.
-- O ViewModel chama o `LoginUserUseCase.kt`, que usa `AuthRepositoryImpl.kt`, ligado ao `AuthService.kt` (Firebase Auth).
+The application starts in `MainActivity.kt`, which initializes the main navigation through `MainNavigation.kt`.
 
-### 3. Registo de Utilizadores
-- `RegisterScreen.kt` interage com `RegisterViewModel.kt`, que chama `RegisterUserUseCase.kt` e comunica com o Firebase Auth.
+Navigation between screens is managed through routes defined in the application.
 
-### 4. Após Login: Dashboard
-- O `DashboardScreen.kt` apresenta atalhos para funcionalidades principais: atividades, planos e nutrição.
+### 2. Authentication
 
-### 5. Registo de Atividades
-- O utilizador acede a `ActivityScreen.kt`, gerido por `ActivityViewModel.kt`.
-- Os dados vão para `RegisterActivityUseCase.kt` e `ActivityRepositoryImpl.kt`, que os envia para Room e Firebase Realtime DB via `ActivityService.kt`.
+The user interacts with `LoginScreen.kt`, which communicates with `LoginViewModel.kt`.
 
-### 6. Geração de Planos
-- `PlanViewModel.kt` chama `GeneratePlanUseCase.kt`, que interage com `PlanRepositoryImpl.kt`.
-- Os dados podem ser sincronizados com o Firebase via `PlanService.kt`.
+The ViewModel uses the authentication use cases and repository implementation to communicate with **Firebase Authentication**.
 
-### 7. Nutrição e Sugestões
-- `NutritionViewModel.kt` usa `GetNutritionTipsUseCase.kt` para devolver recomendações estáticas.
+### 3. User Registration
 
-### 8. Integração com Wearables
-- `SyncWearableDataUseCase.kt` poderá usar sensores locais ou APIs de terceiros para recolher dados e integrá-los.
+`RegisterScreen.kt` interacts with `RegisterViewModel.kt`, which uses the registration use case and authentication repository to register users.
 
+### 4. Dashboard
 
-## Conclusão
-Este projeto Move&Fit segue uma arquitetura clara, modular e adaptada à realidade académica da licenciatura, promovendo uma implementação eficiente dos requisitos essenciais, com possibilidade de expansão futura para funcionalidades avançadas.
+After authentication, `DashboardScreen.kt` provides access to the application's main areas, including activities, workout plans and nutrition.
+
+### 5. Activity Management
+
+Physical activities are managed through `ActivityScreen.kt` and `ActivityViewModel.kt`.
+
+Activity information passes through the corresponding use cases and repository implementation, with support for local persistence and Firebase synchronization.
+
+### 6. Workout Plans
+
+`PlanViewModel.kt` interacts with the plan use cases and repository implementation to manage workout plan information.
+
+Plan data can also be synchronized through the corresponding remote service.
+
+### 7. Nutrition
+
+`NutritionViewModel.kt` uses the nutrition use case to provide nutrition-related tips and recommendations.
+
+### 8. Wearable Integration
+
+The project includes models, repositories and use cases prepared for wearable data.
+
+Wearable integration was considered as an **optional/future extension** and is not presented as a fully implemented feature.
+
+## 💾 Data Management
+
+Move&Fit uses different technologies for data management:
+
+- **Room** for local data persistence
+- **Firebase Realtime Database** for remote data synchronization
+- **Firebase Authentication** for user authentication
+- Repository interfaces and implementations to separate the Domain and Data layers
+
+## 🧪 Testing
+
+The project includes test structures for validating parts of the application's data layer, including `ActivityDaoTest.kt`.
+
+## 🎓 Academic Context
+
+Developed during the **2024/2025 academic year** as an academic project for the **Mobile Device Programming** course of the Computer Systems Engineering degree.
+
+The project provided practical experience in:
+
+- Kotlin development
+- Android application development
+- Jetpack Compose
+- Mobile application architecture
+- Firebase integration
+- Local persistence with Room
+- Clean Architecture concepts
+- Separation of responsibilities
+- Mobile UI development
+
+## 👩‍💻 Author
+
+**Daniela Brito**
